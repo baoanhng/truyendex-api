@@ -27,8 +27,8 @@ class ReadListService
 
     public static function getFollow(string $seriesId, int $userId)
     {
-        $read = ReadList::where('user_id', $seriesId)
-            ->where('series_id', $userId)
+        $read = ReadList::where('user_id', $userId)
+            ->where('series_id', $seriesId)
             ->first();
 
         return $read;
