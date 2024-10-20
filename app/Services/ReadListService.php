@@ -7,11 +7,9 @@ use Illuminate\Http\Request;
 
 class ReadListService
 {
-    public static function createOrDelete(Request $request)
+    public static function createOrDelete(string $seriesId, int $userId)
     {
-        $read = ReadList::where('user_id', $request->user()->id)
-                        ->where('series_id', $request['series_id'])
-                        ->first();
+        $read = self::getFollow($seriesId, $userId);
 
         if ($read) {
             $read->delete();
@@ -19,11 +17,20 @@ class ReadListService
             return false;
         } else {
             ReadList::create([
-                'user_id' => $request->user()->id,
-                'series_id' => $request['series_id'],
+                'user_id' => $userId,
+                'series_id' => $seriesId,
             ]);
 
             return true;
         }
+    }
+
+    public static function getFollow(string $seriesId, int $userId)
+    {
+        $read = ReadList::where('user_id', $seriesId)
+            ->where('series_id', $userId)
+            ->first();
+
+        return $read;
     }
 }

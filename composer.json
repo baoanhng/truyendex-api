@@ -11,6 +11,7 @@
         "laravel/tinker": "^2.9"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.1",
         "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.2",
         "laravel/pint": "^1.13",
@@ -37,7 +38,9 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:meta"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
