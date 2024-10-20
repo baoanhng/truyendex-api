@@ -16,6 +16,7 @@ class SeriesController extends Controller
         $followed = ReadListService::createOrDelete($validated['series_id'], $request->user()->id);
 
         return response()->json([
+            'followed' => $followed,
             'message' => $followed ? 'Series is followed!' : 'Series is unfollowed!',
         ]);
     }
