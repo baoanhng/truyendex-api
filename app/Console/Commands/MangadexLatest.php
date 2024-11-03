@@ -48,7 +48,6 @@ class MangadexLatest extends Command
             $seriesTitle = $this->getSeriesTitle($chapter['relationships'][1]);
 
             Series::updateOrCreate(['uuid' => $seriesId], [
-                'uuid' => $seriesId,
                 'title' => $seriesTitle, // nullable
                 'latest_chapter_uuid' => $chapter['id'],
                 'latest_chapter_title' => $chapter['attributes']['title'], // nullable
