@@ -11,7 +11,7 @@ class UserController extends Controller
     public function readList(Request $request)
     {
         $list = ReadList::where('user_id', $request->user()->id)
-            ->latest('id')
+            ->with('series')->latest('id')
             ->paginate(20);
 
         return $list;

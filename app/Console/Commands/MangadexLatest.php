@@ -41,15 +41,34 @@ class MangadexLatest extends Command
             return;
         }
 
-        $chapters = $data['data'];
+        $chapters = array_reverse($data['data']);
 
         foreach ($chapters as $chapter) {
             $seriesId = $chapter['relationships'][1]['id'];
+            $seriesTitle = $this->getSeriesTitle($chapter['relationships'][1]);
 
             Series::updateOrCreate(['uuid' => $seriesId], [
                 'uuid' => $seriesId,
+                'title' => $seriesTitle, // nullable
                 'latest_chapter_uuid' => $chapter['id'],
+                'latest_chapter_title' => $chapter['attributes']['title'], // nullable
             ]);
         }
+    }
+
+    /**
+     *
+     * @param array $seriesData
+     * @return string
+     */
+    private function getSeriesTitle(array $seriesData)
+    {
+        $title = $seriesData['attributes']['title']['en'];
+
+        if (isset($seriesData['attributes']['altTitles']['vi'])) {
+            $title = $seriesData['attributes']['altTitles']['vi'];
+        }
+
+        return $title;
     }
 }

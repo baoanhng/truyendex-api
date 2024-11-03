@@ -17,7 +17,6 @@ class SeriesController extends Controller
 
         return response()->json([
             'followed' => $followed,
-            'message' => $followed ? 'Series is followed!' : 'Series is unfollowed!',
         ]);
     }
 

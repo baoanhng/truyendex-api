@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('series', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
+            $table->string('title')->nullable();
             $table->uuid('latest_chapter_uuid');
+            $table->string('latest_chapter_title')->nullable();
             $table->timestamps();
         });
     }
