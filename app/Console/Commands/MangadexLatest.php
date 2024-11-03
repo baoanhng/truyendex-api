@@ -62,11 +62,7 @@ class MangadexLatest extends Command
      */
     private function getSeriesTitle(array $seriesData)
     {
-        $title = $seriesData['attributes']['title']['en'];
-
-        if (isset($seriesData['attributes']['altTitles']['vi'])) {
-            $title = $seriesData['attributes']['altTitles']['vi'];
-        }
+        $title = $seriesData['attributes']['altTitles']['vi'] ?? $seriesData['attributes']['title']['en'];
 
         return $title;
     }
