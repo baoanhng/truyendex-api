@@ -5,10 +5,16 @@ namespace App\Http\Controllers\Pub;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FollowSeriesRequest;
 use App\Services\ReadListService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SeriesController extends Controller
 {
+    /**
+     *
+     * @param FollowSeriesRequest $request
+     * @return JsonResponse
+     */
     public function follow(FollowSeriesRequest $request)
     {
         $validated = $request->validated();
@@ -20,6 +26,11 @@ class SeriesController extends Controller
         ]);
     }
 
+    /**
+     *
+     * @param FollowSeriesRequest $request
+     * @return JsonResponse
+     */
     public function checkFollow(FollowSeriesRequest $request)
     {
         $validated = $request->validated();
