@@ -22,7 +22,7 @@ class FollowSeriesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'series_id' => ['required', 'uuid'],
+            'series_uuid' => ['required', 'uuid'],
         ];
     }
 }

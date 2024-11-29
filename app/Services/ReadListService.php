@@ -9,13 +9,13 @@ class ReadListService
 {
     /**
      *
-     * @param string $seriesId
+     * @param string $seriesUUID
      * @param int $userId
      * @return bool
      */
-    public static function createOrDelete(string $seriesId, int $userId)
+    public static function createOrDelete(string $seriesUUId, int $userId)
     {
-        $read = self::getFollow($seriesId, $userId);
+        $read = self::getFollow($seriesUUId, $userId);
 
         if ($read) {
             $read->delete();
@@ -24,7 +24,7 @@ class ReadListService
         } else {
             ReadList::create([
                 'user_id' => $userId,
-                'series_id' => $seriesId,
+                'series_uuid' => $seriesUUId,
             ]);
 
             return true;
@@ -33,14 +33,14 @@ class ReadListService
 
     /**
      *
-     * @param string $seriesId
+     * @param string $seriesUUId
      * @param int $userId
      * @return ReadList|null
      */
-    public static function getFollow(string $seriesId, int $userId)
+    public static function getFollow(string $seriesUUId, int $userId)
     {
         $read = ReadList::where('user_id', $userId)
-            ->where('series_id', $seriesId)
+            ->where('series_uuid', $seriesUUId)
             ->first();
 
         return $read;

@@ -19,7 +19,7 @@ class SeriesController extends Controller
     {
         $validated = $request->validated();
 
-        $followed = ReadListService::createOrDelete($validated['series_id'], $request->user()->id);
+        $followed = ReadListService::createOrDelete($validated['series_uuid'], $request->user()->id);
 
         return response()->json([
             'followed' => $followed,
@@ -35,7 +35,7 @@ class SeriesController extends Controller
     {
         $validated = $request->validated();
 
-        $read = ReadListService::getFollow($validated['series_id'], $request->user()->id);
+        $read = ReadListService::getFollow($validated['series_uuid'], $request->user()->id);
 
         return response()->json([
             'followed' => $read ? true : false,
