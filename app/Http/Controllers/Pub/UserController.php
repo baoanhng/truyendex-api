@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function readList(Request $request)
     {
-        $list = ReadList::join('series', 'read_lists.series_uuid', '=', 'series.uuid')
+        $list = ReadList::leftJoin('series', 'read_lists.series_uuid', '=', 'series.uuid')
             ->select(
                 'read_lists.*',
                 'series.title',
@@ -23,7 +23,7 @@ class UserController extends Controller
                 'series.latest_chapter_title',
                 'series.updated_at as series_updated_at'
             )
-            ->orderBy('series_updated_at')
+            ->orderByRaw('series_updated_at IS NULL, series_updated_at DESC, read_lists.updated_at DESC')
             ->paginate(20);
 
         return $list;
