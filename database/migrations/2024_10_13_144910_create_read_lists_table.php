@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('read_lists', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->uuid('series_id');
+            $table->uuid('series_uuid');
             $table->timestamps();
 
-            $table->unique(['user_id', 'series_id']);
+            $table->unique(['user_id', 'series_uuid']);
         });
     }
 
