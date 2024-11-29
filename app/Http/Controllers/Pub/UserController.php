@@ -23,6 +23,7 @@ class UserController extends Controller
                 'series.latest_chapter_title',
                 'series.updated_at as series_updated_at'
             )
+            ->where('read_lists.user_id', request()->user()->id)
             ->orderByRaw('series_updated_at IS NULL, series_updated_at DESC, read_lists.updated_at DESC')
             ->paginate(20);
 
