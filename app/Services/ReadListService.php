@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ReadList;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReadListService
@@ -44,5 +45,27 @@ class ReadListService
             ->first();
 
         return $read;
+    }
+
+    /**
+     *
+     * @param User $user
+     * @return mixed
+     */
+    public static function userList(User $user)
+    {
+        $list = ReadList::leftJoin('series', 'read_lists.series_uuid', '=', 'series.uuid')
+            ->select(
+                'read_lists.*',
+                'series.title',
+                'series.latest_chapter_uuid',
+                'series.latest_chapter_title',
+                'series.updated_at as series_updated_at'
+            )
+            ->where('read_lists.user_id', $user->id)
+            ->orderByRaw('series_updated_at IS NULL, series_updated_at DESC, read_lists.updated_at DESC')
+            ->paginate(20);
+
+        return $list;
     }
 }
