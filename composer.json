@@ -9,6 +9,7 @@
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "mews/purifier": "^3.4",
         "spatie/laravel-permission": "^6.10"
     },
     "require-dev": {
