@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Pub\CommentController;
 use App\Http\Controllers\Pub\SeriesController;
 use App\Http\Controllers\Pub\UserController;
 use Illuminate\Http\Request;
@@ -15,4 +16,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/series/check-follow', [SeriesController::class, 'checkFollow']);
     Route::post('/series/follow', [SeriesController::class, 'follow']);
+
+    Route::get('/comment/list', [CommentController::class, 'list']);
+    Route::post('/comment/store', [CommentController::class, 'store']);
+    Route::post('/comment/update', [CommentController::class, 'update']);
 });
