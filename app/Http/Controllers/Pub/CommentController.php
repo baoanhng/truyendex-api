@@ -19,8 +19,8 @@ class CommentController extends Controller
     public function list(Request $request)
     {
         $comments = Comment::where('commentable_type', $request->type)
-            ->where('commentable_id', $request->uuid)
-            ->with('user')
+            ->where('commentable_id', $request->type_id)
+            ->with('user')->latest('id')
             ->paginate(20);
 
         return response()->json([
@@ -39,7 +39,7 @@ class CommentController extends Controller
 
         $comment = Comment::create([
             'commentable_type' => $validated['type'],
-            'commentable_id' => $validated['uuid'],
+            'commentable_id' => $validated['type_id'],
             'content' => Purifier::clean($validated['content']),
         ]);
 

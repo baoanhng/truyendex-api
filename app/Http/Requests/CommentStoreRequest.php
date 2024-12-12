@@ -22,8 +22,8 @@ class CommentStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => ['required'],
-            'uuid' => ['required', 'uuid'],
+            'type' => ['required', 'string'],
+            'type_id' => ['required', 'string'],
             'parent_id' => ['required', 'integer', 'min:0'],
             'content' => ['required', 'string', 'min:10'],
         ];
