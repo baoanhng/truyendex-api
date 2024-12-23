@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pub;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentStoreRequest;
 use App\Models\Comment;
+use App\Services\CommentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Mews\Purifier\Facades\Purifier;
@@ -18,10 +19,7 @@ class CommentController extends Controller
      */
     public function list(Request $request)
     {
-        $comments = Comment::where('commentable_type', $request->type)
-            ->where('commentable_id', $request->type_id)
-            ->with('user')->latest('id')
-            ->paginate(20);
+        $comments = CommentService::list($request);
 
         return response()->json([
             'comments' => $comments,
@@ -37,8 +35,10 @@ class CommentController extends Controller
     {
         $validated = $request->validated();
 
+        $type = CommentService::resolveType($validated['type']);
+
         $comment = Comment::create([
-            'commentable_type' => $validated['type'],
+            'commentable_type' => $type,
             'commentable_id' => $validated['type_id'],
             'content' => Purifier::clean($validated['content']),
         ]);
