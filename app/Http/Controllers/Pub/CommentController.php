@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pub;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentStoreRequest;
+use App\Http\Requests\CommentUpdateRequest;
 use App\Models\Comment;
 use App\Services\CommentService;
 use Illuminate\Http\JsonResponse;
@@ -42,6 +43,25 @@ class CommentController extends Controller
             'commentable_id' => $validated['type_id'],
             'content' => Purifier::clean($validated['content']),
         ]);
+
+        return response()->json([
+            'comment' => $comment,
+        ]);
+    }
+
+    /**
+     *
+     * @param CommentUpdateRequest $request
+     * @return JsonResponse
+     */
+    public function update(CommentUpdateRequest $request)
+    {
+        $validated = $request->validated();
+
+        $comment = Comment::where('id', $validated['id'])
+            ->update([
+                'content' => Purifier::clean($validated['content']),
+            ]);
 
         return response()->json([
             'comment' => $comment,
