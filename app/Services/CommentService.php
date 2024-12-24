@@ -15,6 +15,7 @@ class CommentService
     public static function resolveType(string $type)
     {
         return match ($type) {
+            'page' => 'App\Models\Page',
             'chapter' => 'App\Models\Chapter',
             'series' => 'App\Models\Series',
             default => 'App\Models\Series',
