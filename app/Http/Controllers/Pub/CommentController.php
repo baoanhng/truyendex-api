@@ -39,6 +39,7 @@ class CommentController extends Controller
         $type = CommentService::resolveType($validated['type']);
 
         $comment = Comment::create([
+            'user_id' => $request->user()->id,
             'commentable_type' => $type,
             'commentable_id' => $validated['type_id'],
             'content' => Purifier::clean($validated['content']),
