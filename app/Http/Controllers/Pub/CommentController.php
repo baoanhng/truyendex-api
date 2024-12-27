@@ -40,6 +40,7 @@ class CommentController extends Controller
 
         $comment = Comment::create([
             'user_id' => $request->user()->id,
+            'parent_id' => $validated['parent_id'],
             'commentable_type' => $type,
             'commentable_id' => $validated['type_id'],
             'content' => Purifier::clean($validated['content']),
@@ -60,6 +61,7 @@ class CommentController extends Controller
         $validated = $request->validated();
 
         $comment = Comment::where('id', $validated['id'])
+            ->where('user_id', $request->user()->id)
             ->update([
                 'content' => Purifier::clean($validated['content']),
             ]);
