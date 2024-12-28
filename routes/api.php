@@ -6,6 +6,8 @@ use App\Http\Controllers\Pub\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// Auth::loginUsingId(1);
+
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/user', function (Request $request) {
