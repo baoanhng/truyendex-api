@@ -16,10 +16,12 @@ class UserSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'admin',
             'email' => 'admin@truyendex.com',
             'password' => Hash::make('neuthichthivao'),
         ]);
+
+        $user->assignRole('admin');
     }
 }

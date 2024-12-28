@@ -34,6 +34,10 @@ class CommentController extends Controller
      */
     public function store(CommentStoreRequest $request)
     {
+        if (!$request->user()->can('create')) {
+            abort(403);
+        }
+
         $validated = $request->validated();
 
         $type = CommentService::resolveType($validated['type']);
@@ -60,9 +64,13 @@ class CommentController extends Controller
     {
         $validated = $request->validated();
 
-        $comment = Comment::where('id', $validated['id'])
-            ->where('user_id', $request->user()->id)
-            ->update([
+        $comment = Comment::first('id', $validated['id']);
+
+        if (!$request->user()->can('update', $comment)) {
+            abort(403);
+        }
+
+        $comment->update([
                 'content' => Purifier::clean($validated['content']),
             ]);
 
