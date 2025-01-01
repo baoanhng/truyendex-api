@@ -55,11 +55,14 @@ class ReadListService
     public static function userList(User $user)
     {
         $list = ReadList::leftJoin('series', 'read_lists.series_uuid', '=', 'series.uuid')
+            ->join('chapters', 'series.latest_chapter_uuid', '=', 'chapters.uuid')
             ->select(
                 'read_lists.*',
                 'series.title',
                 'series.latest_chapter_uuid',
                 'series.last_chapter_updated_at as series_updated_at',
+                'chapters.title as chapter_title',
+                'chapters.updated_at as chapter_updated_at',
             )
             ->where('read_lists.user_id', $user->id)
             ->orderByRaw('series_updated_at IS NULL, series_updated_at DESC, read_lists.updated_at DESC')

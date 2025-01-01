@@ -31,53 +31,54 @@ class MangadexLatest extends Command
     public function handle()
     {
         $lastestChapterUpdatedAt = $this->toDateTime(Chapter::max('md_updated_at')) ?? new \DateTime("2018-01-01");
-
         $lastestChapterUpdatedAt = $lastestChapterUpdatedAt->format('Y-m-d\TH:i:s');
 
-        while (true) {
-            Log::debug($lastestChapterUpdatedAt);
+        Log::debug($lastestChapterUpdatedAt);
 
-            $response = Http::get('https://api.mangadex.org/chapter', [
-                'updatedAtSince' => $lastestChapterUpdatedAt,
-                'offset' => 0,
-                'limit' => 10,
-                'translatedLanguage' => ['vi'],
-                'contentRating' => ['safe', 'suggestive', 'erotica', 'pornographic'],
-                'includeFutureUpdates' => 0,
-                'includeFuturePublishAt' => 0,
-                'includeExternalUrl' => 0,
-                'order[updatedAt]' => 'asc',
-                'includes[]' => 'manga',
+        $response = Http::get('https://api.mangadex.org/chapter', [
+            'updatedAtSince' => $lastestChapterUpdatedAt,
+            'offset' => 0,
+            'limit' => 10,
+            'translatedLanguage' => ['vi'],
+            'contentRating' => ['safe', 'suggestive', 'erotica', 'pornographic'],
+            'includeFutureUpdates' => 0,
+            'includeFuturePublishAt' => 0,
+            'includeExternalUrl' => 0,
+            'order[updatedAt]' => 'asc',
+            'includes[]' => 'manga',
+        ]);
+
+        if (!$response->ok()) {
+            // log response data
+            Log::debug('Failed to fetch data from Mangadex', [
+                'response' => $response->json(),
             ]);
+            $this->error('Http code not ok');
+            return;
+        }
 
-            if (!$response->ok()) {
-                // log response data
-                Log::debug('Failed to fetch data from Mangadex', [
-                    'response' => $response->json(),
-                ]);
-                $this->error('Http code not ok');
-                return;
-            }
+        $data = $response->json();
 
-            $data = $response->json();
+        if ($data['result'] !== 'ok') {
+            $this->error('Returned result code is not OK');
+            return;
+        }
 
-            if ($data['result'] !== 'ok') {
-                $this->error('Returned result code is not OK');
-                return;
-            }
+        if (empty($data['data'])) {
+            return;
+        }
 
-            if (empty($data['data'])) break;
+        $chapters = ($data['data']);
 
-            $chapters = ($data['data']);
+        foreach ($chapters as $mdChapter) {
+            // find $mdChapter['relationships'] with type 'manga'
+            $mdSeries = array_values(array_filter($mdChapter['relationships'], function ($relationship) {
+                return $relationship['type'] === 'manga';
+            }))[0];
+            $seriesUUId = $mdSeries['id'];
+            $seriesTitle = $this->getMangaTitle($mdSeries);
 
-            foreach ($chapters as $mdChapter) {
-                // find $mdChapter['relationships'] with type 'manga'
-                $mdSeries = array_values(array_filter($mdChapter['relationships'], function ($relationship) {
-                    return $relationship['type'] === 'manga';
-                }))[0];
-                $seriesUUId = $mdSeries['id'];
-                $seriesTitle = $this->getMangaTitle($mdSeries);
-
+            \DB::transaction(function () use ($mdChapter, $mdSeries, $seriesUUId, $seriesTitle) {
                 // get $chapter from following code
                 Chapter::updateOrCreate(['uuid' => $mdChapter['id']], [
                     'uuid' => $mdChapter['id'],
@@ -93,12 +94,15 @@ class MangadexLatest extends Command
                     'md_updated_at' => $this->toDateTime($mdSeries['attributes']['updatedAt']),
                     'latest_chapter_uuid' => $mdChapter['id'],
                 ]);
-            }
-
-            $lastestChapterUpdatedAt = $this->toDateTime(end($chapters)['attributes']['updatedAt'])->format('Y-m-d\TH:i:s');
+            });
         }
     }
 
+    /**
+     *
+     * @param mixed $manga
+     * @return mixed
+     */
     private function getMangaTitle($manga)
     {
         if (!$manga) {
@@ -122,6 +126,11 @@ class MangadexLatest extends Command
         return $firstTitle ?: "No title";
     }
 
+    /**
+     *
+     * @param mixed $chapter
+     * @return string
+     */
     private function getChapterTitle($chapter)
     {
         if (!$chapter) {
@@ -150,6 +159,11 @@ class MangadexLatest extends Command
         return "Oneshot";
     }
 
+    /**
+     *
+     * @param mixed $dateString
+     * @return Carbon
+     */
     private function toDateTime($dateString)
     {
         return Carbon::parse($dateString);
