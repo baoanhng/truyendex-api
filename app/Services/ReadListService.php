@@ -59,8 +59,7 @@ class ReadListService
                 'read_lists.*',
                 'series.title',
                 'series.latest_chapter_uuid',
-                'series.latest_chapter_title',
-                'series.updated_at as series_updated_at'
+                'series.last_chapter_updated_at as series_updated_at',
             )
             ->where('read_lists.user_id', $user->id)
             ->orderByRaw('series_updated_at IS NULL, series_updated_at DESC, read_lists.updated_at DESC')

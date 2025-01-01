@@ -3,8 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Models\Series;
+use App\Models\Chapter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class MangadexLatest extends Command
 {
@@ -27,43 +30,128 @@ class MangadexLatest extends Command
      */
     public function handle()
     {
-        $response = Http::get('https://api.mangadex.org/chapter?limit=10&translatedLanguage%5B%5D=vi&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=0&includeFuturePublishAt=0&includeExternalUrl=0&order%5BreadableAt%5D=desc&includes%5B%5D=manga');
+        $lastestChapterUpdatedAt = $this->toDateTime(Chapter::max('md_updated_at')) ?? new \DateTime("2018-01-01");
 
-        if (!$response->ok()) {
-            $this->error('Http code not ok');
-            return;
-        }
+        $lastestChapterUpdatedAt = $lastestChapterUpdatedAt->format('Y-m-d\TH:i:s');
 
-        $data = $response->json();
+        while (true) {
+            Log::debug($lastestChapterUpdatedAt);
 
-        if ($data['result'] !== 'ok') {
-            $this->error('Returned result code is not OK');
-            return;
-        }
-
-        $chapters = array_reverse($data['data']);
-
-        foreach ($chapters as $chapter) {
-            $seriesUUId = $chapter['relationships'][1]['id'];
-            $seriesTitle = $this->getSeriesTitle($chapter['relationships'][1]);
-
-            Series::updateOrCreate(['uuid' => $seriesUUId], [
-                'title' => $seriesTitle, // nullable
-                'latest_chapter_uuid' => $chapter['id'],
-                'latest_chapter_title' => $chapter['attributes']['title'], // nullable
+            $response = Http::get('https://api.mangadex.org/chapter', [
+                'updatedAtSince' => $lastestChapterUpdatedAt,
+                'offset' => 0,
+                'limit' => 10,
+                'translatedLanguage' => ['vi'],
+                'contentRating' => ['safe', 'suggestive', 'erotica', 'pornographic'],
+                'includeFutureUpdates' => 0,
+                'includeFuturePublishAt' => 0,
+                'includeExternalUrl' => 0,
+                'order[updatedAt]' => 'asc',
+                'includes[]' => 'manga',
             ]);
+
+            if (!$response->ok()) {
+                // log response data
+                Log::debug('Failed to fetch data from Mangadex', [
+                    'response' => $response->json(),
+                ]);
+                $this->error('Http code not ok');
+                return;
+            }
+
+            $data = $response->json();
+
+            if ($data['result'] !== 'ok') {
+                $this->error('Returned result code is not OK');
+                return;
+            }
+
+            if (empty($data['data'])) break;
+
+            $chapters = ($data['data']);
+
+            foreach ($chapters as $mdChapter) {
+                // find $mdChapter['relationships'] with type 'manga'
+                $mdSeries = array_values(array_filter($mdChapter['relationships'], function ($relationship) {
+                    return $relationship['type'] === 'manga';
+                }))[0];
+                $seriesUUId = $mdSeries['id'];
+                $seriesTitle = $this->getMangaTitle($mdSeries);
+
+                // get $chapter from following code
+                Chapter::updateOrCreate(['uuid' => $mdChapter['id']], [
+                    'uuid' => $mdChapter['id'],
+                    'title' => $this->getChapterTitle($mdChapter),
+                    'md_updated_at' => $this->toDateTime($mdChapter['attributes']['updatedAt']),
+                    'series_uuid' => $seriesUUId,
+                ]);
+
+                Series::updateOrCreate(['uuid' => $seriesUUId], [
+                    'uuid' => $seriesUUId,
+                    'title' => $seriesTitle, // nullable
+                    'last_chapter_updated_at' => $this->toDateTime($mdChapter['attributes']['updatedAt']),
+                    'md_updated_at' => $this->toDateTime($mdSeries['attributes']['updatedAt']),
+                    'latest_chapter_uuid' => $mdChapter['id'],
+                ]);
+            }
+
+            $lastestChapterUpdatedAt = $this->toDateTime(end($chapters)['attributes']['updatedAt'])->format('Y-m-d\TH:i:s');
         }
     }
 
-    /**
-     *
-     * @param array $seriesData
-     * @return string
-     */
-    private function getSeriesTitle(array $seriesData)
+    private function getMangaTitle($manga)
     {
-        $title = $seriesData['attributes']['altTitles']['vi'] ?? $seriesData['attributes']['title']['en'];
+        if (!$manga) {
+            return "";
+        }
 
-        return $title;
+        $altTitles = $manga['attributes']['altTitles'] ?? [];
+        $title = $manga['attributes']['title'] ?? [];
+
+        foreach ($altTitles as $altTitle) {
+            if (isset($altTitle['vi'])) {
+                return $altTitle['vi'];
+            }
+        }
+
+        if (isset($title['en'])) {
+            return $title['en'];
+        }
+
+        $firstTitle = reset($title);
+        return $firstTitle ?: "No title";
+    }
+
+    private function getChapterTitle($chapter)
+    {
+        if (!$chapter) {
+            return "";
+        }
+
+        $attributes = $chapter['attributes'] ?? [];
+        $title = $attributes['title'] ?? null;
+        $volume = $attributes['volume'] ?? null;
+        $chapterNumber = $attributes['chapter'] ?? null;
+
+        if ($title) {
+            return ($volume !== null ? "T{$volume} " : "") .
+                ($chapterNumber !== null ? "C{$chapterNumber} " : "") .
+                $title;
+        }
+
+        if ($volume) {
+            return "Chương {$chapterNumber} Tập {$volume}";
+        }
+
+        if ($chapterNumber) {
+            return "Chương {$chapterNumber}";
+        }
+
+        return "Oneshot";
+    }
+
+    private function toDateTime($dateString)
+    {
+        return Carbon::parse($dateString);
     }
 }
