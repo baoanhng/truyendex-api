@@ -34,7 +34,7 @@ class CommentController extends Controller
      */
     public function store(CommentStoreRequest $request)
     {
-        if (!$request->user()->can('create')) {
+        if (!$request->user()->can('create', Comment::class)) {
             abort(403);
         }
 
