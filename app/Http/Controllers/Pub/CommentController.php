@@ -38,17 +38,7 @@ class CommentController extends Controller
             abort(403);
         }
 
-        $validated = $request->validated();
-
-        $type = CommentService::resolveType($validated['type']);
-
-        $comment = Comment::create([
-            'user_id' => $request->user()->id,
-            'parent_id' => $validated['parent_id'],
-            'commentable_type' => $type,
-            'commentable_id' => $validated['type_id'],
-            'content' => Purifier::clean($validated['content']),
-        ]);
+        $comment = CommentService::store($request);
 
         return response()->json([
             'comment' => $comment,
@@ -70,9 +60,7 @@ class CommentController extends Controller
             abort(403);
         }
 
-        $comment->update([
-                'content' => Purifier::clean($validated['content']),
-            ]);
+        CommentService::update($request, $comment);
 
         return response()->json([
             'comment' => $comment,
