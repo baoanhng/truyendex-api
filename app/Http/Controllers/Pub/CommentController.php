@@ -54,13 +54,13 @@ class CommentController extends Controller
     {
         $validated = $request->validated();
 
-        $comment = Comment::first('id', $validated['id']);
+        $comment = Comment::find($validated['id']);
 
         if (!$request->user()->can('update', $comment)) {
             abort(403);
         }
 
-        CommentService::update($request, $comment);
+        CommentService::update($validated, $comment);
 
         return response()->json([
             'comment' => $comment,

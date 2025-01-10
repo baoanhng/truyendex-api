@@ -66,18 +66,16 @@ class CommentService
 
     /**
      *
-     * @param CommentUpdateRequest $request
+     * @param array $validated
      * @param Comment $comment
      * @return true
      */
-    public static function update(CommentUpdateRequest $request, Comment $comment)
+    public static function update(array $validated, Comment $comment)
     {
-        $validated = $request->validated();
-
-        $comment->update([
+        $updated = $comment->update([
             'content' => Purifier::clean($validated['content']),
         ]);
 
-        return true;
+        return $updated;
     }
 }
