@@ -34,6 +34,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'roles',
     ];
 
     /**
@@ -66,7 +67,7 @@ class User extends Authenticatable
     protected function displayRoles(): Attribute
     {
         return new Attribute(
-            get: fn () => $this->roles()->pluck('name')->toArray(),
+            get: fn () => $this->roles->pluck('name')->toArray(),
         );
     }
 }
