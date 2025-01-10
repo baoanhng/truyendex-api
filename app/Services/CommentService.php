@@ -51,7 +51,7 @@ class CommentService
     {
         $validated = $request->validated();
 
-        $type = CommentService::resolveType($validated['type']);
+        $type = self::resolveType($validated['type']);
 
         $comment = Comment::create([
             'user_id' => $request->user()->id,
