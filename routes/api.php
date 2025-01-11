@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 // Auth::loginUsingId(1);
 
+Route::get('/comment/list', [CommentController::class, 'list']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/user', function (Request $request) {
@@ -19,7 +21,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/series/check-follow', [SeriesController::class, 'checkFollow']);
     Route::post('/series/follow', [SeriesController::class, 'follow']);
 
-    Route::get('/comment/list', [CommentController::class, 'list']);
     Route::post('/comment/store', [CommentController::class, 'store']);
     Route::post('/comment/update', [CommentController::class, 'update']);
 });
