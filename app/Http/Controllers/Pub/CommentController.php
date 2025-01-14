@@ -66,4 +66,36 @@ class CommentController extends Controller
             'comment' => $comment,
         ]);
     }
+
+    /**
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function delete(Request $request)
+    {
+        $validated = $request->validated([
+            'id' => 'required', 'exists:comments,id',
+        ]);
+
+        $comment = Comment::find($validated['id']);
+
+        if (!$request->user()->can('delete', $comment)) {
+            abort(403);
+        }
+
+        \DB::transaction(function () use ($comment) {
+            $comment->user->comment_count -= 1;
+            $comment->user->save();
+
+            $comment->series->comment_count -= 1;
+            $comment->series->save();
+
+            $comment->delete();
+        });
+
+        return response()->json([
+            'status' => 'comment-deleted',
+        ]);
+    }
 }
