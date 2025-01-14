@@ -66,8 +66,8 @@ class CommentService
             $comment->user->comment_count += 1;
             $comment->user->save();
 
-            $comment->series->comment_count += 1;
-            $comment->series->save();
+            $comment->commentable->comment_count += 1;
+            $comment->commentable->save();
 
             return $comment;
         });
@@ -88,5 +88,10 @@ class CommentService
         ]);
 
         return $updated;
+    }
+
+    public static function delete(Comment $comment)
+    {
+
     }
 }

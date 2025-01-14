@@ -84,18 +84,18 @@ class CommentController extends Controller
             abort(403);
         }
 
-        \DB::transaction(function () use ($comment) {
+        $result = \DB::transaction(function () use ($comment) {
             $comment->user->comment_count -= 1;
             $comment->user->save();
 
-            $comment->series->comment_count -= 1;
-            $comment->series->save();
+            $comment->commentable->comment_count -= 1;
+            $comment->commentable->save();
 
             $comment->delete();
         });
 
         return response()->json([
-            'status' => 'comment-deleted',
+            'status' => $result,
         ]);
     }
 }
