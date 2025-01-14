@@ -32,7 +32,7 @@ class RoleAndPermissionSeeder extends Seeder
         $role = Role::create(['name' => 'moderator'])
             ->givePermissionTo(['manage comments']);
 
-        $role = Role::create(['name' => 'writer'])
+        $role = Role::create(['name' => 'member'])
             ->givePermissionTo(['create comments', 'edit own comments', 'delete own comments']);
     }
 }
