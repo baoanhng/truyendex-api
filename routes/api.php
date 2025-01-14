@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/comment/list', [CommentController::class, 'list']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
