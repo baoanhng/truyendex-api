@@ -90,8 +90,25 @@ class CommentService
         return $updated;
     }
 
+    /**
+     *
+     * @param Comment $comment
+     * @return mixed
+     */
     public static function delete(Comment $comment)
     {
+        $result = \DB::transaction(function () use ($comment) {
+            $comment->user->comment_count -= 1;
+            $comment->user->save();
 
+            $comment->commentable->comment_count -= 1;
+            $comment->commentable->save();
+
+            $comment->delete();
+
+            return true;
+        });
+
+        return $result;
     }
 }
