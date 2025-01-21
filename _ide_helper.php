@@ -18480,6 +18480,207 @@ namespace Mews\Purifier\Facades {
             }
     }
 
+namespace Spatie\Analytics\Facades {
+            /**
+     * 
+     *
+     * @mixin \Spatie\Analytics\Analytics
+     */        class Analytics {
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function setPropertyId($propertyId)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->setPropertyId($propertyId);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function getPropertyId()
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->getPropertyId();
+        }
+                    /**
+         * 
+         *
+         * @return \Illuminate\Support\Collection<int, array{ pageTitle: string,
+         *   activeUsers: int,
+         *   screenPageViews: int
+         * }>
+         * @static 
+         */        public static function fetchVisitorsAndPageViews($period, $maxResults = 10, $offset = 0)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->fetchVisitorsAndPageViews($period, $maxResults, $offset);
+        }
+                    /**
+         * 
+         *
+         * @return \Illuminate\Support\Collection<int, array{ pageTitle: string,
+         *   date: \Carbon\Carbon,
+         *   activeUsers: int,
+         *   screenPageViews: int
+         * }>
+         * @static 
+         */        public static function fetchVisitorsAndPageViewsByDate($period, $maxResults = 10, $offset = 0)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->fetchVisitorsAndPageViewsByDate($period, $maxResults, $offset);
+        }
+                    /**
+         * 
+         *
+         * @return \Illuminate\Support\Collection<int, array{ date: \Carbon\Carbon,
+         *   activeUsers: int,
+         *   screenPageViews: int
+         * }>
+         * @static 
+         */        public static function fetchTotalVisitorsAndPageViews($period, $maxResults = 20, $offset = 0)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->fetchTotalVisitorsAndPageViews($period, $maxResults, $offset);
+        }
+                    /**
+         * 
+         *
+         * @return \Illuminate\Support\Collection<int, array{ pageTitle: string,
+         *   fullPageUrl: string,
+         *   screenPageViews: int
+         * }>
+         * @static 
+         */        public static function fetchMostVisitedPages($period, $maxResults = 20, $offset = 0)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->fetchMostVisitedPages($period, $maxResults, $offset);
+        }
+                    /**
+         * 
+         *
+         * @return \Illuminate\Support\Collection<int, array{ pageReferrer: string,
+         *   screenPageViews: int
+         * }>
+         * @static 
+         */        public static function fetchTopReferrers($period, $maxResults = 20, $offset = 0)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->fetchTopReferrers($period, $maxResults, $offset);
+        }
+                    /**
+         * 
+         *
+         * @return \Illuminate\Support\Collection<int, array{ newVsReturning: string,
+         *   activeUsers: int
+         * }>
+         * @static 
+         */        public static function fetchUserTypes($period)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->fetchUserTypes($period);
+        }
+                    /**
+         * 
+         *
+         * @return \Illuminate\Support\Collection<int, array{ browser: string,
+         *   screenPageViews: int
+         * }>
+         * @static 
+         */        public static function fetchTopBrowsers($period, $maxResults = 10, $offset = 0)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->fetchTopBrowsers($period, $maxResults, $offset);
+        }
+                    /**
+         * 
+         *
+         * @return \Illuminate\Support\Collection<int, array{ country: string,
+         *   screenPageViews: int
+         * }>
+         * @static 
+         */        public static function fetchTopCountries($period, $maxResults = 10, $offset = 0)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->fetchTopCountries($period, $maxResults, $offset);
+        }
+                    /**
+         * 
+         *
+         * @return \Illuminate\Support\Collection<int, array{ operatingSystem: string,
+         *   screenPageViews: int
+         * }>
+         * @static 
+         */        public static function fetchTopOperatingSystems($period, $maxResults = 10, $offset = 0)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->fetchTopOperatingSystems($period, $maxResults, $offset);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function get($period, $metrics, $dimensions = [], $maxResults = 10, $orderBy = [], $offset = 0, $dimensionFilter = null, $keepEmptyRows = false, $metricFilter = null)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->get($period, $metrics, $dimensions, $maxResults, $orderBy, $offset, $dimensionFilter, $keepEmptyRows, $metricFilter);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function getRealtime($period, $metrics, $dimensions = [], $maxResults = 10, $orderBy = [], $offset = 0, $dimensionFilter = null, $keepEmptyRows = false, $metricFilter = null)
+        {
+                        /** @var \Spatie\Analytics\Analytics $instance */
+                        return $instance->getRealtime($period, $metrics, $dimensions, $maxResults, $orderBy, $offset, $dimensionFilter, $keepEmptyRows, $metricFilter);
+        }
+                    /**
+         * Register a custom macro.
+         *
+         * @param string $name
+         * @param object|callable $macro
+         * @param-closure-this static  $macro
+         * @return void 
+         * @static 
+         */        public static function macro($name, $macro)
+        {
+                        \Spatie\Analytics\Analytics::macro($name, $macro);
+        }
+                    /**
+         * Mix another object into the class.
+         *
+         * @param object $mixin
+         * @param bool $replace
+         * @return void 
+         * @throws \ReflectionException
+         * @static 
+         */        public static function mixin($mixin, $replace = true)
+        {
+                        \Spatie\Analytics\Analytics::mixin($mixin, $replace);
+        }
+                    /**
+         * Checks if macro is registered.
+         *
+         * @param string $name
+         * @return bool 
+         * @static 
+         */        public static function hasMacro($name)
+        {
+                        return \Spatie\Analytics\Analytics::hasMacro($name);
+        }
+                    /**
+         * Flush the existing macros.
+         *
+         * @return void 
+         * @static 
+         */        public static function flushMacros()
+        {
+                        \Spatie\Analytics\Analytics::flushMacros();
+        }
+            }
+    }
+
 namespace Illuminate\Http {
             /**
      * 
@@ -22257,6 +22458,7 @@ namespace  {
             class View extends \Illuminate\Support\Facades\View {}
             class Vite extends \Illuminate\Support\Facades\Vite {}
             class Purifier extends \Mews\Purifier\Facades\Purifier {}
+            class Analytics extends \Spatie\Analytics\Facades\Analytics {}
     }
 
 
