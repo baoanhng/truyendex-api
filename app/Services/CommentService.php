@@ -58,6 +58,14 @@ class CommentService
         $result = \DB::transaction(function () use ($validated, $type, $request) {
             $commentable = $type::where('uuid', $validated['type_id'])->first();
 
+            if ($validated['parent_id'] > 0) {
+                $parent = Comment::find($validated['parent_id']);
+
+                if ($parent->parent_id > 0) {
+                    return false;
+                }
+            }
+
             $comment = Comment::create([
                 'user_id' => $request->user()->id,
                 'parent_id' => $validated['parent_id'],
@@ -66,9 +74,17 @@ class CommentService
                 'content' => Purifier::clean($validated['content']),
             ]);
 
+            $comment->user->timestamps = false;
             $comment->user->comment_count += 1;
             $comment->user->save();
 
+            if (isset($parent)) {
+                $parent->timestamps = false;
+                $parent->replies_count += 1;
+                $parent->save();
+            }
+
+            $commentable->timestamps = false;
             $commentable->comment_count += 1;
             $commentable->save();
 
@@ -101,9 +117,11 @@ class CommentService
     public static function delete(Comment $comment)
     {
         $result = \DB::transaction(function () use ($comment) {
+            $comment->user->timestamps = false;
             $comment->user->comment_count -= 1;
             $comment->user->save();
 
+            $comment->commentable->timestamps = false;
             $comment->commentable->comment_count -= 1;
             $comment->commentable->save();
 
