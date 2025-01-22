@@ -55,19 +55,21 @@ class CommentService
         $type = self::resolveType($validated['type']);
 
         $result = \DB::transaction(function () use ($validated, $type, $request) {
+            $commentable = $type::where('uuid', $validated['type_id'])->first();
+
             $comment = Comment::create([
                 'user_id' => $request->user()->id,
                 'parent_id' => $validated['parent_id'],
                 'commentable_type' => $type,
-                'commentable_id' => $validated['type_id'],
+                'commentable_id' => $commentable->id,
                 'content' => Purifier::clean($validated['content']),
             ]);
 
             $comment->user->comment_count += 1;
             $comment->user->save();
 
-            $comment->commentable->comment_count += 1;
-            $comment->commentable->save();
+            $commentable->comment_count += 1;
+            $commentable->save();
 
             return $comment;
         });
