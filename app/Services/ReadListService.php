@@ -36,6 +36,24 @@ class ReadListService
      *
      * @param string $seriesUUId
      * @param int $userId
+     * @return true
+     */
+    public static function createOnly(string $seriesUUId, int $userId)
+    {
+        ReadList::createOrUpdate([
+            'user_id' => $userId,
+            'series_uuid' => $seriesUUId,
+        ], [
+            'updated_at' => now()
+        ]);
+
+        return true;
+    }
+
+    /**
+     *
+     * @param string $seriesUUId
+     * @param int $userId
      * @return ReadList|null
      */
     public static function getFollow(string $seriesUUId, int $userId)

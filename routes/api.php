@@ -19,6 +19,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/series/check-follow', [SeriesController::class, 'checkFollow']);
     Route::post('/series/follow', [SeriesController::class, 'follow']);
+    Route::post('/series/follows', [SeriesController::class, 'follows']);
 
     Route::post('/comment/store', [CommentController::class, 'store']);
     Route::post('/comment/update', [CommentController::class, 'update']);
