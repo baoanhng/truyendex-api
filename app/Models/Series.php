@@ -18,6 +18,19 @@ class Series extends Model
     protected $guarded = [];
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'md_updated_at' => 'datetime',
+            'last_chapter_updated_at' => 'datetime',
+        ];
+    }
+
+    /**
      *
      * @return MorphMany<Comment, Series>
      */
