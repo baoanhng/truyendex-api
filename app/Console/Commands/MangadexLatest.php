@@ -56,7 +56,7 @@ class MangadexLatest extends Command
         ]);
 
         // For debugging
-        $this->info($url);
+        // $this->info($url);
 
         if (!$response->ok()) {
             // log response data
