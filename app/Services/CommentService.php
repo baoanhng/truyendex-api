@@ -34,9 +34,10 @@ class CommentService
     public static function list(Request $request)
     {
         $type = self::resolveType($request->type);
+        $commentable = $type::where('uuid', $request->type_id)->first();
 
         return Comment::where('commentable_type', $type)
-            ->where('commentable_id', $request->type_id)
+            ->where('commentable_id', $commentable->id)
             ->where('parent_id', 0)
             ->with(['user', 'replies' => fn ($query) => $query->limit(3), 'replies.user'])
             ->latest('id')
