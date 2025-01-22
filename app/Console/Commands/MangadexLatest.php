@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use GuzzleHttp\TransferStats;
 
 class MangadexLatest extends Command
 {
@@ -30,12 +31,18 @@ class MangadexLatest extends Command
      */
     public function handle()
     {
-        $lastestChapterUpdatedAt = $this->toDateTime(Chapter::max('md_updated_at')) ?? new \DateTime("2018-01-01");
+        $latestChapter = Chapter::latest()->first();
+
+        $lastestChapterUpdatedAt = $latestChapter?->created_at ?? new \DateTime("2018-01-01");
         $lastestChapterUpdatedAt = $lastestChapterUpdatedAt->format('Y-m-d\TH:i:s');
 
         Log::debug($lastestChapterUpdatedAt);
 
-        $response = Http::get('https://api.mangadex.org/chapter', [
+        $response = Http::withOptions([
+            'on_stats' => function (TransferStats $stats) use (&$url) {
+                $url = $stats->getEffectiveUri();
+            }
+        ])->get('https://api.mangadex.org/chapter', [
             'updatedAtSince' => $lastestChapterUpdatedAt,
             'offset' => 0,
             'limit' => 10,
@@ -47,6 +54,9 @@ class MangadexLatest extends Command
             'order[updatedAt]' => 'asc',
             'includes[]' => 'manga',
         ]);
+
+        // For debugging
+        // $this->info($url);
 
         if (!$response->ok()) {
             // log response data
@@ -65,6 +75,7 @@ class MangadexLatest extends Command
         }
 
         if (empty($data['data'])) {
+            $this->error('No data');
             return;
         }
 
