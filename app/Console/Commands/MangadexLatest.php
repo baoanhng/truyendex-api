@@ -45,7 +45,7 @@ class MangadexLatest extends Command
         ])->get('https://api.mangadex.org/chapter', [
             'updatedAtSince' => $lastestChapterUpdatedAt,
             'offset' => 0,
-            'limit' => 10,
+            'limit' => 100,
             'translatedLanguage' => ['vi'],
             'contentRating' => ['safe', 'suggestive', 'erotica', 'pornographic'],
             'includeFutureUpdates' => 0,
