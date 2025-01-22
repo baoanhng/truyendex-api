@@ -33,7 +33,7 @@ class MangadexLatest extends Command
     {
         $latestChapter = Chapter::latest('md_updated_at')->first();
 
-        $lastestChapterUpdatedAt = $latestChapter?->md_updated_at ?? new \DateTime("2018-01-01");
+        $lastestChapterUpdatedAt = $latestChapter?->md_updated_at->addSeconds(1) ?? new \DateTime("2018-01-01");
         $lastestChapterUpdatedAt = $lastestChapterUpdatedAt->format('Y-m-d\TH:i:s');
 
         Log::debug($lastestChapterUpdatedAt);
@@ -56,7 +56,7 @@ class MangadexLatest extends Command
         ]);
 
         // For debugging
-        // $this->info($url);
+        $this->info($url);
 
         if (!$response->ok()) {
             // log response data
