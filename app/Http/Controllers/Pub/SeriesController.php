@@ -35,7 +35,7 @@ class SeriesController extends Controller
     public function follows(Request $request)
     {
         $validated = $request->validate([
-            'series_uuids' => 'required|array',
+            'series_uuids' => ['required', 'array'],
         ]);
 
         foreach ($validated['series_uuids'] as $series_uuid) {

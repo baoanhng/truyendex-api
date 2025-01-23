@@ -80,7 +80,7 @@ class CommentService
 
             if (isset($parent)) {
                 $parent->timestamps = false;
-                $parent->replies_count += 1;
+                $parent->reply_count += 1;
                 $parent->save();
             }
 

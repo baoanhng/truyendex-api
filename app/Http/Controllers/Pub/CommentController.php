@@ -74,8 +74,8 @@ class CommentController extends Controller
      */
     public function delete(Request $request)
     {
-        $validated = $request->validated([
-            'id' => 'required', 'exists:comments,id',
+        $validated = $request->validate([
+            'id' => ['required', 'exists:comments,id'],
         ]);
 
         $comment = Comment::find($validated['id']);
