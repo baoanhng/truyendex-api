@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Pub;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FollowSeriesRequest;
+use App\Models\ReadList;
+use App\Models\Series;
 use App\Services\ReadListService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,14 +38,17 @@ class SeriesController extends Controller
     {
         $validated = $request->validate([
             'series_uuids' => ['required', 'array'],
+            'series_uuids.*' => ['required', 'uuid'],
         ]);
 
-        foreach ($validated['series_uuids'] as $series_uuid) {
-            ReadListService::createOnly($series_uuid, $request->user()->id);
-        }
+        $inserts = Series::where('uuid', $validated['series_uuids'])->pluck('uuid')->map(function ($uuid) use ($request) {
+            return ['user_id', $request->user()->id, 'series_uuid' => $uuid];
+        });
+
+        $result = ReadList::upsert($inserts->toArray(), ['user_id', 'series_uuid']);
 
         return response()->json([
-            'followed' => true,
+            'followed' => $result,
         ]);
     }
 
