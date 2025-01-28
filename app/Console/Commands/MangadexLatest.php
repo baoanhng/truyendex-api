@@ -102,7 +102,7 @@ class MangadexLatest extends Command
                     'uuid' => $seriesUUId,
                     'title' => $seriesTitle, // nullable
                     'last_chapter_updated_at' => $this->toDateTime($mdChapter['attributes']['updatedAt']),
-                    'md_updated_at' => $this->toDateTime($mdSeries['attributes']['updatedAt']),
+                    // 'md_updated_at' => $this->toDateTime($mdSeries['attributes']['updatedAt']), // // we will update this field in UpdateMangadexSeries.php
                     'latest_chapter_uuid' => $mdChapter['id'],
                 ]);
             });
