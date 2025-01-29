@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ReadList;
 use App\Services\ReadListService;
 use Http;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -25,7 +26,7 @@ class UserController extends Controller
     /**
      *
      * @param Request $request
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return JsonResponse
      */
     public function syncList(Request $request)
     {
