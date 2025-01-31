@@ -37,11 +37,24 @@ class CommentService
         $commentable = $type::where('uuid', $request->type_id)->first();
 
         return Comment::where('commentable_type', $type)
-            ->where('commentable_id', $commentable->id)
-            ->where('parent_id', 0)
+            ->where('commentable_id', $commentable->id)->where('parent_id', 0)
             ->with(['user', 'replies' => fn ($query) => $query->limit(2), 'replies.user'])
             ->latest('id')
             ->paginate(20);
+    }
+
+    /**
+     *
+     * @param Comment $tailComment
+     * @param int $limit
+     * @return void
+     */
+    public static function fetchReply(Comment $tailComment, int $limit)
+    {
+        return Comment::with('user')->where('parent_id', $tailComment->parent_id)
+            ->where('id', '>', $tailComment->id)
+            ->latest('id')->limit($limit)
+            ->get();
     }
 
     /**

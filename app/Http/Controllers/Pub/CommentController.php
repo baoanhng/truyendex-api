@@ -29,6 +29,30 @@ class CommentController extends Controller
 
     /**
      *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function fetchReply(Request $request)
+    {
+        $validated = $request->validate([
+            'last_id' => ['required', 'integer', 'min:1'],
+        ]);
+
+        $tailComment = Comment::find($validated['last_id']);
+
+        if (!$tailComment || $tailComment->parent_id == 0) {
+            abort(400);
+        }
+
+        $replies = CommentService::fetchReply($tailComment, 10);
+
+        return response()->json([
+            'replies' => $replies,
+        ]);
+    }
+
+    /**
+     *
      * @param CommentStoreRequest $request
      * @return JsonResponse
      */
