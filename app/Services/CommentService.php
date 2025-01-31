@@ -38,7 +38,7 @@ class CommentService
 
         return Comment::where('commentable_type', $type)
             ->where('commentable_id', $commentable->id)->where('parent_id', 0)
-            ->with(['user', 'replies' => fn ($query) => $query->limit(2), 'replies.user'])
+            ->with(['user', 'replies' => fn($query) => $query->limit(2), 'replies.user'])
             ->latest('id')
             ->paginate(20);
     }
@@ -53,7 +53,7 @@ class CommentService
     {
         return Comment::with('user')->where('parent_id', $tailComment->parent_id)
             ->where('id', '>', $tailComment->id)
-            ->latest('id')->limit($limit)
+            ->oldest('id')->limit($limit)
             ->get();
     }
 

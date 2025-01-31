@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 // Auth::loginUsingId(1);
 
 Route::get('/comment/list', [CommentController::class, 'list']);
+Route::post('/comment/fetch-reply', [CommentController::class, 'fetchReply']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
@@ -25,5 +26,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/comment/store', [CommentController::class, 'store']);
     Route::post('/comment/update', [CommentController::class, 'update']);
     Route::post('/comment/delete', [CommentController::class, 'delete']);
-    Route::post('/comment/fetch-reply', [CommentController::class, 'fetchReply']);
 });
