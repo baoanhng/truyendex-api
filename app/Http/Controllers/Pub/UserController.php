@@ -28,7 +28,7 @@ class UserController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function syncList(Request $request)
+    public function syncReadList(Request $request)
     {
         $validated = $request->validate([
             'source' => ['required', 'string'],

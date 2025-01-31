@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 // Auth::loginUsingId(1);
 
+## Unregistered
 Route::get('/comment/list', [CommentController::class, 'list']);
 Route::post('/comment/fetch-reply', [CommentController::class, 'fetchReply']);
 
@@ -17,7 +18,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::get('/user/read-list', [UserController::class, 'readList']);
-    Route::post('/user/read-list/sync', [UserController::class, 'syncList']);
+    Route::post('/user/read-list/sync', [UserController::class, 'syncReadList']);
 
     Route::post('/series/check-follow', [SeriesController::class, 'checkFollow']);
     Route::post('/series/follow', [SeriesController::class, 'follow']);
