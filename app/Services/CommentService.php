@@ -3,9 +3,10 @@
 namespace App\Services;
 
 use App\Http\Requests\CommentStoreRequest;
-use App\Http\Requests\CommentUpdateRequest;
+use App\Models\Chapter;
 use App\Models\Comment;
-use Illuminate\Contracts\Support\ValidatedData;
+use App\Models\Page;
+use App\Models\Series;
 use Illuminate\Http\Request;
 use Purifier;
 
@@ -19,10 +20,10 @@ class CommentService
     public static function resolveType(string $type)
     {
         return match ($type) {
-            'page' => 'App\Models\Page',
-            'chapter' => 'App\Models\Chapter',
-            'series' => 'App\Models\Series',
-            default => 'App\Models\Series',
+            'page' => Page::class,
+            'chapter' => Chapter::class,
+            'series' => Series::class,
+            default => Series::class,
         };
     }
 
