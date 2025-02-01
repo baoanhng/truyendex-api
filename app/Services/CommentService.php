@@ -41,7 +41,7 @@ class CommentService
             ->where('commentable_id', $commentable->id)->where('parent_id', 0)
             ->with(['user', 'replies' => fn($query) => $query->limit(2), 'replies.user'])
             ->latest('id')
-            ->paginate(20);
+            ->paginate(15);
     }
 
     /**
