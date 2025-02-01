@@ -12,19 +12,21 @@ use Illuminate\Support\Facades\Route;
 Route::get('/comment/list', [CommentController::class, 'list']);
 Route::post('/comment/fetch-reply', [CommentController::class, 'fetchReply']);
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
 
-    Route::get('/user/read-list', [UserController::class, 'readList']);
-    Route::post('/user/read-list/sync', [UserController::class, 'syncReadList']);
+    Route::middleware(['verified'])->group(function () {
+        Route::get('/user/read-list', [UserController::class, 'readList']);
+        Route::post('/user/read-list/sync', [UserController::class, 'syncReadList']);
 
-    Route::post('/series/check-follow', [SeriesController::class, 'checkFollow']);
-    Route::post('/series/follow', [SeriesController::class, 'follow']);
-    Route::post('/series/follows', [SeriesController::class, 'follows']);
+        Route::post('/series/check-follow', [SeriesController::class, 'checkFollow']);
+        Route::post('/series/follow', [SeriesController::class, 'follow']);
+        Route::post('/series/follows', [SeriesController::class, 'follows']);
 
-    Route::post('/comment/store', [CommentController::class, 'store']);
-    Route::post('/comment/update', [CommentController::class, 'update']);
-    Route::post('/comment/delete', [CommentController::class, 'delete']);
+        Route::post('/comment/store', [CommentController::class, 'store']);
+        Route::post('/comment/update', [CommentController::class, 'update']);
+        Route::post('/comment/delete', [CommentController::class, 'delete']);
+    });
 });
