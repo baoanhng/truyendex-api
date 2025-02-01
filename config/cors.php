@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000'), ...array_filter(explode(',', env('FRONTEND_CORS_ORIGINS')))],
+    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000'), ...array_filter(explode(',', env('FRONTEND_ALT_URLS')))],
 
     'allowed_origins_patterns' => [],
 
