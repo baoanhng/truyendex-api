@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/comment/list', [CommentController::class, 'list']);
 Route::post('/comment/fetch-reply', [CommentController::class, 'fetchReply']);
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
