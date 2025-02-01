@@ -13,3 +13,5 @@ Schedule::command(MangadexLatest::class)
 Schedule::command(UpdateMangadexSeries::class)
     ->everyMinute()
     ->runInBackground();
+
+Schedule::command('telescope:prune')->daily();
