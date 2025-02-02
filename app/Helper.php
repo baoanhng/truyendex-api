@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App;
 
-abstract class Controller
+class Helper
 {
     /**
+     * Get the current host and scheme
      *
      * @return string
      */
-    public function getCurrentHostAndScheme()
+    public static function getCurrentHostAndScheme()
     {
         return request()->getScheme() . '://' . ltrim(str_replace('api', '', request()->getHost()), '.');
     }

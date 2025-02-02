@@ -1,9 +1,11 @@
 <?php
 
+use App\Helper;
 use App\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->redirectGuestsTo(
+            fn () => Helper::getCurrentHostAndScheme().'/dang-nhap?verified=false'
+        );
+
         $middleware->api(prepend: [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             EnsureFrontendRequestsAreStateful::class,
