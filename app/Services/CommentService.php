@@ -36,7 +36,7 @@ class CommentService
     public static function list(Request $request)
     {
         $type = self::resolveType($request->type);
-        $commentable = $type::where('uuid', $request->type_id)->first();
+        $commentable = $type::where('uuid', $request->type_id)->firstOrFail();
 
         return Comment::where('commentable_type', $type)
             ->where('commentable_id', $commentable->id)->where('parent_id', 0)
@@ -83,7 +83,7 @@ class CommentService
         $type = self::resolveType($validated['type']);
 
         $result = \DB::transaction(function () use ($validated, $type, $request) {
-            $commentable = $type::where('uuid', $validated['type_id'])->first();
+            $commentable = $type::where('uuid', $validated['type_id'])->firstOrFail();
 
             if ($validated['parent_id'] > 0) {
                 $parent = Comment::find($validated['parent_id']);
