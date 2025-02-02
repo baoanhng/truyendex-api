@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Hacky method
         config([
-            'session.domain' => '.' . ltrim(str_replace('api', '', request()->getHttpHost()), '.')
+            'session.domain' => '.' . ltrim(str_replace('api', '', request()->getHost()), '.')
         ]);
 
         RateLimiter::for('api', function (Request $request) {
