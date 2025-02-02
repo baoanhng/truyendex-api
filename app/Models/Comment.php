@@ -26,7 +26,7 @@ class Comment extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'commentable_type',
+        // 'commentable_type',
         'commentable_id',
     ];
 
