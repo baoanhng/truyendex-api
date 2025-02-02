@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command(MangadexLatest::class)
-    ->everyTenSeconds()
+    ->everyThirtySeconds()
     ->runInBackground();
 
 Schedule::command(UpdateMangadexSeries::class)
