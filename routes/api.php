@@ -22,7 +22,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/user/read-list', [UserController::class, 'readList']);
         Route::post('/user/read-list/sync', [UserController::class, 'syncReadList']);
 
-        Route::post('/series/check-follow', [SeriesController::class, 'checkFollow']);
+        Route::post('/series/check-info', [SeriesController::class, 'checkInfo']);
+
         Route::post('/series/follow', [SeriesController::class, 'follow']);
         Route::post('/series/follows', [SeriesController::class, 'follows']);
 

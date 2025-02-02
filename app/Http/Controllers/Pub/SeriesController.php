@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Pub;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FollowSeriesRequest;
+use App\Http\Requests\SeriesInfoRequest;
 use App\Models\ReadList;
 use App\Models\Series;
 use App\Services\ReadListService;
@@ -14,10 +14,10 @@ class SeriesController extends Controller
 {
     /**
      *
-     * @param FollowSeriesRequest $request
+     * @param SeriesInfoRequest $request
      * @return JsonResponse
      */
-    public function follow(FollowSeriesRequest $request)
+    public function follow(SeriesInfoRequest $request)
     {
         $validated = $request->validated();
 
@@ -54,17 +54,24 @@ class SeriesController extends Controller
 
     /**
      *
-     * @param FollowSeriesRequest $request
+     * @param SeriesInfoRequest $request
      * @return JsonResponse
      */
-    public function checkFollow(FollowSeriesRequest $request)
+    public function checkInfo(SeriesInfoRequest $request)
     {
         $validated = $request->validated();
 
-        $read = ReadListService::getFollow($validated['series_uuid'], $request->user()->id);
+        $series = Series::where('uuid', $validated['series_uuid'])->firstOrFail();
+
+        if (\Auth::check()) {
+            $read = ReadListService::getFollow($validated['series_uuid'], $request->user()->id);
+        } else {
+            $read = null;
+        }
 
         return response()->json([
-            'followed' => $read ? true : false,
+            'followed' => \Auth::check() ? ($read ? true : false) : null,
+            'comment_count' => $series->comment_count,
         ]);
     }
 }
