@@ -16,7 +16,7 @@ class VerifyEmailController extends Controller
     {
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->intended(
-                config('app.frontend_url').'/dang-nhap?verified=true'
+                $this->getCurrentHostAndScheme().'/dang-nhap?verified=true'
             );
         }
 
@@ -25,7 +25,7 @@ class VerifyEmailController extends Controller
         }
 
         return redirect()->intended(
-            config('app.frontend_url').'/dang-nhap?verified=true'
+            $this->getCurrentHostAndScheme().'/dang-nhap?verified=true'
         );
     }
 }
