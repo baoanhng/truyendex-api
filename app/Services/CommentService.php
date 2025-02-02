@@ -115,6 +115,12 @@ class CommentService
             $commentable->comment_count += 1;
             $commentable->save();
 
+            if ($commentable instanceof Chapter) {
+                $commentable->series->timestamps = false;
+                $commentable->series->comment_count += 1;
+                $commentable->series->save();
+            }
+
             return $comment;
         });
 
@@ -148,9 +154,17 @@ class CommentService
             $comment->user->comment_count -= 1;
             $comment->user->save();
 
-            $comment->commentable->timestamps = false;
-            $comment->commentable->comment_count -= 1;
-            $comment->commentable->save();
+            $commentable = $comment->commentable;
+
+            $commentable->timestamps = false;
+            $commentable->comment_count -= 1;
+            $commentable->save();
+
+            if ($commentable instanceof Chapter) {
+                $commentable->series->timestamps = false;
+                $commentable->series->comment_count -= 1;
+                $commentable->series->save();
+            }
 
             $comment->delete();
 
