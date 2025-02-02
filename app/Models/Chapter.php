@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Chapter extends Model
 {
@@ -26,5 +27,14 @@ class Chapter extends Model
         return [
             'md_updated_at' => 'datetime',
         ];
+    }
+
+    /**
+     *
+     * @return BelongsTo<Series, Chapter>
+     */
+    public function series()
+    {
+        return $this->belongsTo(Series::class, 'series_uuid', 'uuid');
     }
 }
