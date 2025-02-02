@@ -7,6 +7,7 @@ use App\Models\Chapter;
 use App\Models\Comment;
 use App\Models\Page;
 use App\Models\Series;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Purifier;
 
@@ -42,6 +43,18 @@ class CommentService
             ->with(['user', 'replies' => fn($query) => $query->limit(2), 'replies.user'])
             ->latest('id')
             ->paginate(15);
+    }
+
+    /**
+     *
+     * @return Collection<int, Comment>
+     */
+    public static function recent($limit = 10)
+    {
+        return Comment::with(['user', 'commentable'])
+            ->latest('id')
+            ->limit($limit)
+            ->get();
     }
 
     /**

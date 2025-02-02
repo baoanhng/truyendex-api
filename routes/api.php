@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 ## Unregistered
 Route::get('/comment/list', [CommentController::class, 'list']);
+Route::get('/comment/recent', [CommentController::class, 'recent']);
 Route::post('/comment/fetch-reply', [CommentController::class, 'fetchReply']);
 
 Route::middleware(['auth:sanctum'])->group(function () {

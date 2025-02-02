@@ -32,6 +32,20 @@ class CommentController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
+    public function recent(Request $request)
+    {
+        $comments = CommentService::recent(15);
+
+        return response()->json([
+            'comments' => $comments,
+        ]);
+    }
+
+    /**
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function fetchReply(Request $request)
     {
         $validated = $request->validate([
