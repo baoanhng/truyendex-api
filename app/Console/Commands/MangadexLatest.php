@@ -160,7 +160,10 @@ class MangadexLatest extends Command
         }
 
         if ($volume) {
-            return "Chương {$chapterNumber} Tập {$volume}";
+            if ($chapterNumber) {
+                return "Chương {$chapterNumber} Tập {$volume}";
+            }
+            return "Oneshot Tập {$volume}";
         }
 
         if ($chapterNumber) {
