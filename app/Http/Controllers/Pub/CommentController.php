@@ -108,7 +108,7 @@ class CommentController extends Controller
     /**
      *
      * @param Request $request
-     * @return void
+     * @return JsonResponse
      */
     public function delete(Request $request)
     {
