@@ -38,7 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
         'roles',
         'email',
-        'email_verified_at',
+        // 'email_verified_at',
         'last_activity_at',
     ];
 
@@ -73,7 +73,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function displayRoles(): Attribute
     {
         return new Attribute(
-            get: fn () => $this->roles->pluck('name')->toArray(),
+            get: fn() => $this->roles->pluck('name')->toArray(),
         );
     }
 }
