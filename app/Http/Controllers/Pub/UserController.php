@@ -14,6 +14,21 @@ class UserController extends Controller
     /**
      *
      * @param Request $request
+     * @return JsonResponse
+     */
+    public function info(Request $request)
+    {
+        $user = $request->user();
+        $user->makeVisible(['email', 'email_verified_at']);
+
+        return response()->json([
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     *
+     * @param Request $request
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function readList(Request $request)

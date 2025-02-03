@@ -14,9 +14,7 @@ Route::get('/comment/recent', [CommentController::class, 'recent']);
 Route::post('/comment/fetch-reply', [CommentController::class, 'fetchReply']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    Route::get('/user', [UserController::class, 'info']);
 
     Route::middleware(['verified'])->group(function () {
         Route::get('/user/read-list', [UserController::class, 'readList']);
