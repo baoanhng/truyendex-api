@@ -8,6 +8,7 @@ use App\Models\Comment;
 use App\Models\Page;
 use App\Models\Series;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Request;
 use Purifier;
 
@@ -51,7 +52,11 @@ class CommentService
      */
     public static function recent($limit = 10)
     {
-        return Comment::with(['user', 'commentable'])
+        return Comment::with(['user', 'commentable' => function (MorphTo $morphTo) {
+                $morphTo->morphWith([
+                    Chapter::class => ['series'],
+                ]);
+            }])
             ->latest('id')
             ->limit($limit)
             ->get();
