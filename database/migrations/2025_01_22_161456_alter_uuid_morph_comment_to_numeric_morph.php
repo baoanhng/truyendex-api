@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('comments', function (Blueprint $table) {
             $table->dropIndex(['commentable_type', 'commentable_id']);
             $table->dropColumn('commentable_id');
-            $table->unsignedBigInteger('commentable_id');
+            $table->unsignedBigInteger('commentable_id')->after('commentable_type');
             $table->index(['commentable_type', 'commentable_id']);
         });
     }
