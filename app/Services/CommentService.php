@@ -91,9 +91,13 @@ class CommentService
             $commentable = $type::where('uuid', $validated['type_id'])->firstOrFail();
 
             if ($validated['parent_id'] > 0) {
-                $parent = Comment::find($validated['parent_id']);
+                $parent = Comment::findOrFail($validated['parent_id']);
 
                 if ($parent->parent_id > 0) {
+                    return false;
+                }
+
+                if (!$parent->isValidOrigin($type, $commentable->id)) {
                     return false;
                 }
             }

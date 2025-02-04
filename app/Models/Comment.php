@@ -50,10 +50,30 @@ class Comment extends Model
 
     /**
      *
+     * @return BelongsTo<Comment, Comment>
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Comment::class, 'parent_id', 'id');
+    }
+
+    /**
+     *
      * @return HasMany<Comment, Comment>
      */
     public function replies()
     {
         return $this->hasMany(Comment::class, 'parent_id', 'id');
+    }
+
+    /**
+     *
+     * @param string $type
+     * @param string $typeId
+     * @return bool
+     */
+    public function isValidOrigin(string $type, string $typeId)
+    {
+        return $this->commentable_type === $type && $this->commentable_id === $typeId;
     }
 }
