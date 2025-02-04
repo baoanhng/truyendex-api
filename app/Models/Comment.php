@@ -69,10 +69,10 @@ class Comment extends Model
     /**
      *
      * @param string $type
-     * @param string $typeId
+     * @param int    $typeId
      * @return bool
      */
-    public function isValidOrigin(string $type, string $typeId)
+    public function isValidOrigin(string $type, int $typeId)
     {
         return $this->commentable_type === $type && $this->commentable_id === $typeId;
     }
