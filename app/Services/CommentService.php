@@ -36,8 +36,8 @@ class CommentService
      */
     public static function list(Request $request)
     {
-        $type = self::resolveType($request->type);
-        $commentable = $type::where('uuid', $request->type_id)->firstOrFail();
+        $type = self::resolveType($request->string('type'));
+        $commentable = $type::where('uuid', $request->string('type_id'))->firstOrFail();
 
         return Comment::where('commentable_type', $type)
             ->where('commentable_id', $commentable->id)->where('parent_id', 0)
