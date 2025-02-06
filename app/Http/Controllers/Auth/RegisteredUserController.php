@@ -23,7 +23,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request): Response
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:'.User::class],
+            'name' => ['required', 'string', 'min:6', 'max:25', 'unique:'.User::class],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'cf-turnstile-response' => ['required', Rule::turnstile()],
