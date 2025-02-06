@@ -98,6 +98,12 @@ class UserController extends Controller
             ], 400);
         }
 
+        if ($validated['current_password'] === $validated['password']) {
+            return response()->json([
+                'message' => 'New password must be different from current password',
+            ], 400);
+        }
+
         $user->password = \Hash::make($validated['password']);
         $user->save();
 
