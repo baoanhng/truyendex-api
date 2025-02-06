@@ -19,6 +19,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::middleware(['verified'])->group(function () {
         Route::get('/user/read-list', [UserController::class, 'readList']);
         Route::post('/user/read-list/sync', [UserController::class, 'syncReadList']);
+        Route::post('/user/change-password', [UserController::class, 'changePassword']);
 
         Route::post('/series/check-info', [SeriesController::class, 'checkInfo']);
 

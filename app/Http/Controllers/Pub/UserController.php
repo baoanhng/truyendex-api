@@ -8,6 +8,7 @@ use App\Services\ReadListService;
 use Http;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
@@ -74,6 +75,39 @@ class UserController extends Controller
 
         return response()->json([
             'followed' => $result,
+        ]);
+    }
+
+    /**
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function changePassword(Request $request)
+    {
+        $validated = $request->validate([
+            'current_password' => ['required', 'string'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = $request->user();
+
+        if (!\Hash::check($validated['current_password'], $user->password)) {
+            return response()->json([
+                'message' => 'Current password is incorrect',
+            ], 400);
+        }
+
+        $user->password = \Hash::make($validated['password']);
+        $user->save();
+
+        \Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json([
+            'changed' => true,
         ]);
     }
 }
