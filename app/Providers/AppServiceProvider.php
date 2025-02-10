@@ -28,8 +28,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Hacky method
+
+        $frontEndUrl = ltrim(str_replace('api', '', request()->getHost()), '.');
+
         config([
-            'session.domain' => '.' . ltrim(str_replace('api', '', request()->getHost()), '.')
+            'app.frontend_url' => $frontEndUrl
+        ]);
+
+        config([
+            'session.domain' => '.' . $frontEndUrl
         ]);
 
         RateLimiter::for('api', function (Request $request) {

@@ -6,6 +6,8 @@ use App\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
+use App\Traits\Socialite\Google;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +15,8 @@ use Socialite;
 
 class AuthenticatedSessionController extends Controller
 {
+    use Google;
+
     /**
      * Handle an incoming authentication request.
      */
@@ -54,20 +58,15 @@ class AuthenticatedSessionController extends Controller
     /**
      *
      * @param string $provider
-     * @return Response
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function socialiteCallback(string $provider): Response
+    public function socialiteCallback(string $provider)
     {
         Helper::verifySocialiteProvider($provider);
 
-        $socUser = Socialite::driver($provider)->user();
+        $this->googleCallback();
 
-        if (!$socUser || !$socUser->email) {
-            abort(400);
-        }
-
-        $user = User::where('email', $socUser->email)->first();
-
-        return response()->noContent();
+        return redirect(config('app.frontend_url') . '/nettrom');
     }
 }

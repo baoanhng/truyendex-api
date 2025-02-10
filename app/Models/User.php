@@ -26,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'comment_count',
+        'socialite_providers',
     ];
 
     /**
@@ -40,6 +41,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'email_verified_at',
         'last_activity_at',
+        'socialite_providers',
     ];
 
     /**
@@ -53,6 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'last_activity_at' => 'datetime',
+            'socialite_providers' => 'array',
         ];
     }
 
@@ -75,5 +78,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return new Attribute(
             get: fn() => $this->roles->pluck('name')->toArray(),
         );
+    }
+
+    /**
+     *
+     * @param string $provider
+     * @return bool
+     */
+    public function isValidSocialiteProvider(string $provider): bool
+    {
+        return in_array($provider, ['google']);
     }
 }
