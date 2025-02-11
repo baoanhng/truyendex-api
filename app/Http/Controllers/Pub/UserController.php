@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pub;
 
 use App\Http\Controllers\Controller;
 use App\Models\ReadList;
+use App\Models\User;
 use App\Services\ReadListService;
 use Http;
 use Illuminate\Http\JsonResponse;
@@ -114,6 +115,31 @@ class UserController extends Controller
 
         return response()->json([
             'changed' => true,
+        ]);
+    }
+
+    public function changeName(Request $request)
+    {
+        $validated = $request->validate([
+            'password' => ['required', 'current_password', 'string'],
+            'name' => ['required', 'string', 'min:6', 'max:25', 'unique:'.User::class],
+        ]);
+
+        $result = \DB::transaction(function () use ($request, $validated) {
+            $user = $request->user();
+            $user->name = $validated['name'];
+            $user->save();
+
+            activity()
+                ->performedOn($user)
+                ->causedBy($user)
+                ->log('Change name');
+
+            return true;
+        });
+
+        return response()->json([
+            'changed' => $result,
         ]);
     }
 }
