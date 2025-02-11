@@ -46,9 +46,9 @@ class AuthenticatedSessionController extends Controller
     /**
      *
      * @param string $provider
-     * @return Response
+     * @return RedirectResponse
      */
-    public function socialiteRedirect(string $provider): Response
+    public function socialiteRedirect(string $provider)
     {
         Helper::verifySocialiteProvider($provider);
 

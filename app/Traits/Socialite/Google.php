@@ -7,7 +7,10 @@ use Socialite;
 
 trait Google
 {
-
+    /**
+     *
+     * @return true
+     */
     public function googleCallback()
     {
         $socUser = Socialite::driver('google')->user();
