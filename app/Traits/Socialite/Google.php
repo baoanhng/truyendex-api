@@ -2,7 +2,9 @@
 
 namespace App\Traits\Socialite;
 
+use App\Enums\RolesEnum;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Socialite;
 
 trait Google
@@ -31,6 +33,10 @@ trait Google
                 'socialite_providers' => ['google'],
                 'email_verified_at' => now(),
             ]);
+
+            $newUser->assignRole(RolesEnum::MEMBER);
+
+            event(new Registered($user));
 
             \Auth::login($newUser, remember: true);
         } else {
