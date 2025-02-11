@@ -19,7 +19,9 @@ trait Google
             abort(400);
         }
 
-        $user = User::where('email', $socUser->email)->first();
+        $user = User::where('email', $socUser->email)
+            ->where('socialite_providers', '!=', '[]')
+            ->first();
 
         if (!$user) {
             $newUser = User::create([
@@ -27,6 +29,7 @@ trait Google
                 'email' => $socUser->email,
                 'password' => \Hash::make(\Str::random(16)),
                 'socialite_providers' => ['google'],
+                'email_verified_at' => now(),
             ]);
 
             \Auth::login($newUser, remember: true);
