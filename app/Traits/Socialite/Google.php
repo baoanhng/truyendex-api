@@ -23,7 +23,7 @@ trait Google
 
         if (!$user) {
             $newUser = User::create([
-                'name' => $socUser->name . \Str::random(5),
+                'name' => $socUser->name . ' ' . \Str::random(5),
                 'email' => $socUser->email,
                 'password' => \Hash::make(\Str::random(16)),
                 'socialite_providers' => ['google'],
