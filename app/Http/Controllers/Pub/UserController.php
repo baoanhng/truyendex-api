@@ -61,7 +61,7 @@ class UserController extends Controller
 
         if ($response->failed()) {
             return response()->json([
-                'message' => 'Failed to sync list',
+                'message' => 'Đã có lỗi xảy ra khi lấy thông tin đồng bộ',
             ], 500);
         }
 
@@ -96,13 +96,13 @@ class UserController extends Controller
 
         if (!\Hash::check($validated['current_password'], $user->password)) {
             return response()->json([
-                'message' => 'Current password is incorrect',
+                'message' => 'Mật khẩu cũ không chính xác',
             ], 400);
         }
 
         if ($validated['current_password'] === $validated['password']) {
             return response()->json([
-                'message' => 'New password must be different from current password',
+                'message' => 'Mật khẩu mới phải khác mật khẩu cũ',
             ], 400);
         }
 
@@ -128,7 +128,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'password' => ['required', 'current_password', 'string'],
-            'name' => ['required', 'string', 'min:6', 'max:25', 'unique:'.User::class],
+            'name' => ['required', 'string', 'min:6', 'max:25', 'unique:' . User::class],
         ]);
 
         $lastChange = Activity::causedBy($request->user())
@@ -137,7 +137,7 @@ class UserController extends Controller
 
         if ($lastChange && ($lastChange->created_at->diffInDays() < 60)) {
             return response()->json([
-                'status' => 'You can only change name once in 60 days',
+                'message' => 'Bạn chỉ có thể đổi tên mỗi 60 ngày',
             ], 400);
         }
 
