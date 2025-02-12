@@ -23,7 +23,7 @@ class CommentUpdateRequest extends FormRequest
     {
         return [
             'id' => ['required', 'integer'],
-            'content' => ['required', 'string', 'min:10'],
+            'content' => ['required', 'string', 'min:10', 'max:5000'],
         ];
     }
 }

@@ -25,7 +25,7 @@ class CommentStoreRequest extends FormRequest
             'type' => ['required', 'string'],
             'type_id' => ['required', 'string'],
             'parent_id' => ['required', 'integer', 'min:0'],
-            'content' => ['required', 'string', 'min:10'],
+            'content' => ['required', 'string', 'min:10', 'max: 5000'],
         ];
     }
 }
