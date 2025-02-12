@@ -10,6 +10,7 @@ use Http;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
+use Spatie\Activitylog\Models\Activity;
 
 class UserController extends Controller
 {
@@ -118,12 +119,27 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function changeName(Request $request)
     {
         $validated = $request->validate([
             'password' => ['required', 'current_password', 'string'],
             'name' => ['required', 'string', 'min:6', 'max:25', 'unique:'.User::class],
         ]);
+
+        $lastChange = Activity::causedBy($request->user())
+            ->where('description', 'Change name')->latest('id')
+            ->first();
+
+        if ($lastChange && ($lastChange->created_at->diffInDays() < 60)) {
+            return response()->json([
+                'status' => 'You can only change name once in 60 days',
+            ], 400);
+        }
 
         $result = \DB::transaction(function () use ($request, $validated) {
             $user = $request->user();
