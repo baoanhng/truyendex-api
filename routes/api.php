@@ -20,6 +20,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/user/read-list', [UserController::class, 'readList']);
         Route::post('/user/read-list/sync', [UserController::class, 'syncReadList']);
         Route::post('/user/change-password', [UserController::class, 'changePassword']);
+        Route::post('/user/change-name', [UserController::class, 'changeName']);
 
         Route::post('/series/check-info', [SeriesController::class, 'checkInfo']);
 
