@@ -35,3 +35,13 @@ Route::post('/email/verification-notification', [EmailVerificationNotificationCo
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
+
+Route::prefix('sso')->group(function () {
+    Route::get('{provider}/redirect', [AuthenticatedSessionController::class, 'socialiteRedirect'])
+        ->middleware('guest')
+        ->name('sso.redirect');
+
+    Route::get('{provider}/callback', [AuthenticatedSessionController::class, 'socialiteCallback'])
+        ->middleware('guest')
+        ->name('sso.callback');
+});
