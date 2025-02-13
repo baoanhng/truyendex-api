@@ -67,6 +67,6 @@ class AuthenticatedSessionController extends Controller
 
         $this->googleCallback();
 
-        return redirect(config('app.frontend_url') . '/nettrom');
+        return redirect()->away(config('app.frontend_url') . '/nettrom');
     }
 }

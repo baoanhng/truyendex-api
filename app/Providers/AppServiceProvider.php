@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
             \URL::forceScheme('https');
 
             config([
-                'app.frontend_url' => $frontEndUrl
+                'app.frontend_url' => 'https://' . $frontEndUrl
             ]);
         }
 
