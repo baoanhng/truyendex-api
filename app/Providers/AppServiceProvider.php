@@ -31,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
         $frontEndUrl = ltrim(str_replace('api', '', request()->getHost()), '.');
 
         if (app()->environment('production')) {
+            \URL::forceScheme('https');
+
             config([
                 'app.frontend_url' => $frontEndUrl
             ]);
