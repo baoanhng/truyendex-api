@@ -22,7 +22,7 @@ trait Google
         }
 
         $user = User::where('email', $socUser->email)
-            ->where('socialite_providers', '!=', '[]')
+            // ->where('socialite_providers', '!=', '[]')
             ->first();
 
         if (!$user) {
@@ -40,6 +40,9 @@ trait Google
 
             \Auth::login($newUser, remember: true);
         } else {
+            $user->socialite_providers = array_unique(array_merge($user->socialite_providers, ['google']));
+            $user->save();
+
             \Auth::login($user, remember: true);
         }
 
