@@ -127,7 +127,6 @@ class UserController extends Controller
     public function changeName(Request $request)
     {
         $validated = $request->validate([
-            'password' => ['required', 'current_password', 'string'],
             'name' => ['required', 'string', 'min:6', 'max:25', 'unique:' . User::class],
         ]);
 
