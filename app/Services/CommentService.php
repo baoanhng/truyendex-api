@@ -39,11 +39,19 @@ class CommentService
         $type = self::resolveType($request->string('type'));
         $commentable = $type::where('uuid', $request->string('type_id'))->firstOrFail();
 
-        return Comment::where('commentable_type', $type)
-            ->where('commentable_id', $commentable->id)->where('parent_id', 0)
-            ->with(['user', 'replies' => fn($query) => $query->limit(2), 'replies.user'])
-            ->latest('id')
-            ->paginate(15);
+
+        $query = Comment::with(['user', 'replies' => fn($query) => $query->limit(2), 'replies.user'])
+            ->whereMorphedTo('commentable', $commentable)
+            ->latest('id');
+
+        if ($commentable instanceof Series) {
+            $query->orWhere(function ($query) use ($commentable) {
+                $query->where('commentable_type', Chapter::class)
+                    ->where('series_id', $commentable->id);
+            });
+        }
+
+        return $query->paginate(15);
     }
 
     /**
@@ -104,9 +112,10 @@ class CommentService
 
             $comment = Comment::create([
                 'user_id' => $request->user()->id,
-                'parent_id' => $validated['parent_id'],
                 'commentable_type' => $type,
                 'commentable_id' => $commentable->id,
+                'parent_id' => $validated['parent_id'],
+                'series_id' => $commentable instanceof Chapter ? $commentable->series->id : 0,
                 'content' => Purifier::clean($validated['content']),
             ]);
 

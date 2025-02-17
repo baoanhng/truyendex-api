@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Chapter extends Model
 {
@@ -36,5 +37,14 @@ class Chapter extends Model
     public function series()
     {
         return $this->belongsTo(Series::class, 'series_uuid', 'uuid');
+    }
+
+    /**
+     *
+     * @return MorphMany<Comment, Chapter>
+     */
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable', id: null, localKey: 'uuid');
     }
 }

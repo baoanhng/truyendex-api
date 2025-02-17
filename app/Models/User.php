@@ -70,6 +70,13 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['roles'];
+
+    /**
      * Get roles array
      *
      * @return Attribute
