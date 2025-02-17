@@ -125,7 +125,6 @@ class CommentService
             $comment->user->save();
 
             if (isset($parent)) {
-                $parent->timestamps = false;
                 $parent->reply_count += 1;
                 $parent->save();
             }
