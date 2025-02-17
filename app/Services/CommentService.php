@@ -41,6 +41,7 @@ class CommentService
 
 
         $query = Comment::with(['user', 'replies' => fn($query) => $query->limit(2), 'replies.user'])
+            ->where('parent_id', 0)
             ->whereMorphedTo('commentable', $commentable)
             ->latest('id');
 

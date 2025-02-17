@@ -18,14 +18,11 @@ return new class extends Migration
         });
 
         // Only use this for small datasets
-        Comment::chunk(200, function ($comments) {
+        Comment::where('commentable_type', Chapter::class)->chunk(200, function ($comments) {
             foreach ($comments as $comment) {
-
-                if ($comment->commentable_type === Chapter::class) {
-                    $comment->timestamps = false;
-                    $comment->series_id = $comment->commentable->series->id;
-                    $comment->save();
-                }
+                $comment->timestamps = false;
+                $comment->series_id = $comment->commentable->series->id;
+                $comment->save();
             }
         });
     }
