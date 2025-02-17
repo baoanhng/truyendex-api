@@ -39,7 +39,12 @@ class CommentService
         $type = self::resolveType($request->string('type'));
         $commentable = $type::where('uuid', $request->string('type_id'))->firstOrFail();
 
-        $query = Comment::with(['user', 'replies' => fn($query) => $query->limit(2), 'replies.user'])
+        $query = Comment::with([
+                'user',
+                'replies' => fn($query) => $query->limit(2),
+                'replies.user',
+                'commentable',
+            ])
             ->where('parent_id', 0)
             ->latest('id');
 
