@@ -186,7 +186,7 @@ class UserController extends Controller
 
             $uploadPath = Helper::makePath(
                 app()->environment() === 'production' ? 'avatars' : 'temp',
-                \Str::random() . '.' . $upload->getClientOriginalExtension()
+                \Str::random(40) . '.' . $upload->getClientOriginalExtension()
             );
 
             $result = \Storage::put(
