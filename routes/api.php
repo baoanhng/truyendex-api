@@ -21,6 +21,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/user/read-list/sync', [UserController::class, 'syncReadList']);
         Route::post('/user/change-password', [UserController::class, 'changePassword']);
         Route::post('/user/change-name', [UserController::class, 'changeName']);
+        Route::post('/user/change-avatar', [UserController::class, 'changeAvatar']);
 
         Route::post('/series/check-info', [SeriesController::class, 'checkInfo']);
 

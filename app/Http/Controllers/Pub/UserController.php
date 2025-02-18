@@ -157,4 +157,39 @@ class UserController extends Controller
             'changed' => $result,
         ]);
     }
+
+    /**
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function changeAvatar(Request $request)
+    {
+        $validated = $request->validate([
+            'avatar' => ['required', 'image', 'max:1024'],
+        ]);
+
+        try {
+            $user = $request->user();
+
+            if ($user->avatar_path) {
+                \Storage::delete($user->avatar_path);
+            }
+
+            $path = $validated['avatar']->store(app()->environment() === 'production' ? 'avatars' : 'temp');
+
+            $user->avatar_path = $path;
+            $user->save();
+
+            return response()->json([
+                'avatar_url' => \Storage::url($path),
+            ]);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+
+            return response()->json([
+                'message' => 'Đã có lỗi xảy ra khi cập nhật ảnh đại diện',
+            ], 500);
+        }
+    }
 }
