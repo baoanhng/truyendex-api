@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Pub;
 
+use App\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\ReadList;
 use App\Models\User;
 use App\Services\ReadListService;
+use File;
 use Http;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -179,19 +181,30 @@ class UserController extends Controller
             }
 
             $upload = $validated['avatar'];
-            $image = Image::read($upload)->scale(width: 300);
+            $image = Image::read($upload)->scale(width: 300)
+                ->encodeByExtension($upload->getClientOriginalExtension(), quality: 70);
 
-            $path = \Storage::putFileAs(
+            $uploadPath = Helper::makePath(
                 app()->environment() === 'production' ? 'avatars' : 'temp',
-                $image->encodeByExtension($upload->getClientOriginalExtension(), quality: 70),
-                \Str::random() . '.' . $upload->getClientOriginalExtension(),
+                \Str::random() . '.' . $upload->getClientOriginalExtension()
             );
 
-            $user->avatar_path = $path;
+            $result = \Storage::put(
+                $uploadPath,
+                $image,
+            );
+
+            if (!$result) {
+                return response()->json([
+                    'message' => 'Đã có lỗi xảy ra khi cập nhật ảnh đại diện',
+                ], 500);
+            }
+
+            $user->avatar_path = $uploadPath;
             $user->save();
 
             return response()->json([
-                'avatar_url' => \Storage::url($path),
+                'avatar_url' => \Storage::url($uploadPath),
             ]);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());

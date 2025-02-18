@@ -25,4 +25,15 @@ class Helper
             abort(400, 'Invalid provider');
         }
     }
+
+    /**
+     *
+     * @param mixed $basePath
+     * @param mixed $name
+     * @return string
+     */
+    public static function makePath($basePath, $name)
+    {
+        return trim($basePath, '/') . '/' . trim($name, '/');
+    }
 }
