@@ -10,7 +10,9 @@ use Http;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
+use Intervention\Image\Laravel\Facades\Image;
 use Spatie\Activitylog\Models\Activity;
+use Storage;
 
 class UserController extends Controller
 {
@@ -176,7 +178,14 @@ class UserController extends Controller
                 \Storage::delete($user->avatar_path);
             }
 
-            $path = $validated['avatar']->store(app()->environment() === 'production' ? 'avatars' : 'temp');
+            $upload = $validated['avatar'];
+            $image = Image::read($upload)->scale(width: 300);
+
+            $path = \Storage::putFileAs(
+                app()->environment() === 'production' ? 'avatars' : 'temp',
+                $image->encodeByExtension($upload->getClientOriginalExtension(), quality: 70),
+                \Str::random() . '.' . $upload->getClientOriginalExtension(),
+            );
 
             $user->avatar_path = $path;
             $user->save();
