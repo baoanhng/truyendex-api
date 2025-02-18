@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command(MangadexLatest::class)
-    ->everyThirtySeconds()
+    ->everyMinute()
     ->runInBackground();
 
 Schedule::command(UpdateMangadexSeries::class)
-    ->everyMinute()
+    ->everyThreeMinutes()
     ->runInBackground();
 
 Schedule::command('telescope:prune')->daily();
