@@ -30,9 +30,11 @@ class SetUserRole extends Command
         $userId = $this->argument('user') ?? $this->ask('Enter the user ID');
         $roleName = $this->argument('role') ?? $this->choice('Enter the role name', RolesEnum::values(), default: 2, multiple: false);
 
-        $user = User::find($userId);
-        $user->assignRole($roleName);
+        \DB::transaction(function () use ($userId, $roleName) {
+            $user = User::find($userId);
+            $user->syncRoles($roleName);
 
-        $this->info("Role {$roleName} assigned to user {$user->name}");
+            $this->info("Role {$roleName} assigned to user {$user->name}");
+        });
     }
 }
