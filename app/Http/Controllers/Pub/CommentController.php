@@ -9,6 +9,7 @@ use App\Models\Comment;
 use App\Services\CommentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Mews\Purifier\Facades\Purifier;
 
 class CommentController extends Controller
@@ -76,7 +77,15 @@ class CommentController extends Controller
             abort(403);
         }
 
+        if (RateLimiter::tooManyAttempts('send-comment:'.request()->user()->id, $perMinute = 5)) {
+            return response()->json([
+                'message' => 'Bạn đã gửi quá nhiều bình luận, vui lòng thử lại sau',
+            ], 429);
+        }
+
         $comment = CommentService::store($request);
+
+        RateLimiter::increment('send-comment:'.request()->user()->id);
 
         return response()->json([
             'comment' => $comment,
