@@ -18,6 +18,19 @@ class ReadList extends Model
     protected $guarded = [];
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'series_updated_at' => 'datetime',
+            'chapter_updated_at' => 'datetime',
+        ];
+    }
+
+    /**
      *
      * @return BelongsTo<Series, ReadList>
      */
