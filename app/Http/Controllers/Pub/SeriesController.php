@@ -13,6 +13,18 @@ use Illuminate\Http\Request;
 class SeriesController extends Controller
 {
     /**
+     * Get series for homepage
+     * @return JsonResponse
+     */
+    public function homepage()
+    {
+        $series = Series::orderBy('md_updated_at', 'desc')
+            ->paginate(20);
+
+        return response()->json($series);
+    }
+
+    /**
      *
      * @param SeriesInfoRequest $request
      * @return JsonResponse

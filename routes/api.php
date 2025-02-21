@@ -23,8 +23,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/user/change-name', [UserController::class, 'changeName']);
         Route::post('/user/change-avatar', [UserController::class, 'changeAvatar']);
 
+        Route::get('/series/homepage', [SeriesController::class, 'homepage']);
         Route::post('/series/check-info', [SeriesController::class, 'checkInfo']);
-
         Route::post('/series/follow', [SeriesController::class, 'follow']);
         Route::post('/series/follows', [SeriesController::class, 'follows']);
 
