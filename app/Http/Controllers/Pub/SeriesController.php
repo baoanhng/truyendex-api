@@ -18,7 +18,7 @@ class SeriesController extends Controller
      */
     public function homepage()
     {
-        $series = Series::orderBy('md_updated_at', 'desc')
+        $series = Series::orderBy('last_chapter_updated_at', 'desc')
             ->paginate(20);
 
         return response()->json($series);
