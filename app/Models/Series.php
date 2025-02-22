@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Series extends Model
@@ -37,5 +38,14 @@ class Series extends Model
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable', id: null, localKey: 'uuid');
+    }
+
+    /**
+     * Get the chapters for the series.
+     * @return HasMany<Chapter, Series>
+     */
+    public function chapters()
+    {
+        return $this->hasMany(Chapter::class, 'series_uuid', 'uuid');
     }
 }

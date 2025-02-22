@@ -19,6 +19,7 @@ class SeriesController extends Controller
     public function homepage()
     {
         $series = Series::orderBy('last_chapter_updated_at', 'desc')
+            ->with(['chapters' => fn($query) => $query->limit(3)->orderBy('id', 'desc')])
             ->paginate(20);
 
         return response()->json($series);
