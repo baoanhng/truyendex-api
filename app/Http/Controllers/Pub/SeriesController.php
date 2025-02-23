@@ -20,7 +20,7 @@ class SeriesController extends Controller
     {
         $series = Series::latest('last_chapter_updated_at')
             ->with(['chapters' => fn($query) => $query->limit(3)->latest('id')])
-            ->paginate(25);
+            ->paginate(28);
 
         return response()->json($series);
     }
