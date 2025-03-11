@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('discussions', function (Blueprint $table) {
             $table->id();
+            $table->unique('uuid');
             $table->unsignedBigInteger('user_id');
             $table->string('title');
             $table->string('slug');
@@ -26,6 +27,10 @@ return new class extends Migration
             $table->unsignedBigInteger('like_count')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('user_id');
+            $table->index('series_id');
+            $table->index('updated_at');
         });
     }
 

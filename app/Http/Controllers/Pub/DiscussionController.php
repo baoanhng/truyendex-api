@@ -36,6 +36,7 @@ class DiscussionController extends Controller
         $validated = $request->validated();
 
         $discussion = new Discussion();
+        $discussion->uuid = \Str::uuid();
         $discussion->user_id = $request->user()->id();
         $discussion->title = \Purifier::clean($validated['title']);
         $discussion->slug = \Str::slug($validated['title']);
