@@ -13,7 +13,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/comment/list', [CommentController::class, 'list']);
 Route::get('/comment/recent', [CommentController::class, 'recent']);
 Route::post('/comment/fetch-reply', [CommentController::class, 'fetchReply']);
+
 Route::get('/series/homepage', [SeriesController::class, 'homepage']);
+
+Route::get('/discussion/list', [DiscussionController::class, 'list']);
+Route::get('/discussion/show/{id}-{slug}', [DiscussionController::class, 'show'])
+    ->where('id', '[0-9]+');
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [UserController::class, 'info']);
@@ -33,9 +38,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/comment/update', [CommentController::class, 'update']);
         Route::post('/comment/delete', [CommentController::class, 'delete']);
 
-        Route::get('/discussion/list', [DiscussionController::class, 'list']);
-        Route::get('/discussion/show/{id}-{slug}', [DiscussionController::class, 'show'])
-            ->where('id', '[0-9]+');
         Route::post('/discussion/store', [DiscussionController::class, 'store']);
     });
 });
