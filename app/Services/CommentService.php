@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Http\Requests\CommentStoreRequest;
 use App\Models\Chapter;
 use App\Models\Comment;
-use App\Models\Page;
+use App\Models\Discussion;
 use App\Models\Series;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -22,7 +22,7 @@ class CommentService
     public static function resolveType(string $type)
     {
         return match ($type) {
-            'page' => Page::class,
+            'discussion' => Discussion::class,
             'chapter' => Chapter::class,
             'series' => Series::class,
             default => Series::class,
