@@ -37,7 +37,7 @@ class Series extends Model
      */
     public function comments()
     {
-        return $this->morphMany(Comment::class, 'commentable', id: null, localKey: 'uuid');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     /**

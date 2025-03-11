@@ -16,4 +16,13 @@ class Discussion extends Model
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     *
+     * @return MorphMany<Comment, Series>
+     */
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 }
