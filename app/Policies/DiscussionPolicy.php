@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Comment;
+use App\Models\Discussion;
 use App\Models\User;
 
-class CommentPolicy
+class DiscussionPolicy
 {
     /**
      * Create a new policy instance.
@@ -30,22 +30,22 @@ class CommentPolicy
 
     public function create(User $user): bool
     {
-        return $user->can('create comments');
+        return $user->can('create discussions');
     }
 
-    public function update(User $user, Comment $comment): bool
+    public function update(User $user, Discussion $discussion): bool
     {
-        if ($user->can('edit own comments')) {
-            return $user->id == $comment->user_id;
+        if ($user->can('edit own discussions')) {
+            return $user->id == $discussion->user_id;
         }
 
         return false;
     }
 
-    public function delete(User $user, Comment $comment): bool
+    public function delete(User $user, Discussion $discussion): bool
     {
-        if ($user->can('delete own comments')) {
-            return $user->id == $comment->user_id;
+        if ($user->can('delete own discussions')) {
+            return $user->id == $discussion->user_id;
         }
 
         return false;

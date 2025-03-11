@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Pub\CommentController;
+use App\Http\Controllers\Pub\DiscussionController;
 use App\Http\Controllers\Pub\SeriesController;
 use App\Http\Controllers\Pub\UserController;
 use Illuminate\Http\Request;
@@ -31,5 +32,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/comment/store', [CommentController::class, 'store']);
         Route::post('/comment/update', [CommentController::class, 'update']);
         Route::post('/comment/delete', [CommentController::class, 'delete']);
+
+        Route::get('/discussion/list', [DiscussionController::class, 'list']);
+        Route::get('/discussion/show/{id}-{slug}', [DiscussionController::class, 'show'])
+            ->where('id', '[0-9]+');
+        Route::post('/discussion/store', [DiscussionController::class, 'store']);
     });
 });
