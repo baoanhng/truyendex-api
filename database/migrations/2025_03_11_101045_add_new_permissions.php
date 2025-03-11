@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\RolesEnum;
+use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,6 +15,8 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Artisan::call('db:seed', ['--class' => RoleAndPermissionSeeder::class]);
+
         Permission::create(['name' => 'create discussions']);
         Permission::create(['name' => 'edit own discussions']);
         Permission::create(['name' => 'delete own discussions']);
