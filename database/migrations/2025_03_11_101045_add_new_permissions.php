@@ -15,7 +15,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Artisan::call('db:seed', ['--class' => RoleAndPermissionSeeder::class]);
+        if (!Role::query()->where('name', RolesEnum::ADMIN->value)->exists()) {
+            Artisan::call('db:seed', ['--class' => RoleAndPermissionSeeder::class]);
+        }
 
         Permission::create(['name' => 'create discussions']);
         Permission::create(['name' => 'edit own discussions']);
