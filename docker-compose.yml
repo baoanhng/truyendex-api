@@ -1,9 +1,34 @@
 version: '3.8'
 
 services:
+  app:
+    container_name: truyendex-app
+    image: zennomi/truyendex-api:latest
+    env_file:
+      - .env
+    environment:
+      - APP_ENV=production
+      - DB_HOST=truyendex-mariadb
+      - REDIS_HOST=truyendex-redis
+      - DB_PORT=3306
+      - REDIS_PORT=6379
+    ports:
+      - "8000:8000"
+    volumes:
+      - truyendex-api:/var/www/html
+    working_dir: /var/www/html
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - truyendex-api
+
   mariadb:
+    container_name: truyendex-mariadb
     image: mariadb:latest
-    container_name: mariadb
     env_file:
       - .env
     environment:
@@ -15,18 +40,32 @@ services:
       - "${DB_PORT}:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
-
+    networks:
+      - truyendex-api
   redis:
+    container_name: truyendex-redis
     image: redis:latest
-    container_name: redis
     env_file:
       - .env
-    command: [ "redis-server", "--requirepass", "${REDIS_PASSWORD}" ]
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     ports:
       - "${REDIS_PORT}:6379"
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - truyendex-api
 
 volumes:
+  truyendex-api:
   mariadb_data:
   redis_data:
+
+networks:
+  truyendex-api:
+    driver: bridge
