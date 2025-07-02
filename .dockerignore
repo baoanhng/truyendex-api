@@ -1,0 +1,51 @@
+# Dependencies
+/node_modules
+/vendor
+/public/build
+/public/hot
+/public/storage
+
+# Environment files
+.env
+.env.backup
+.env.production
+
+# IDE files
+/.fleet
+/.idea
+/.vscode
+/.zed
+.phpactor.json
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+
+# Testing
+/.phpunit.cache
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+
+# Logs
+npm-debug.log
+yarn-error.log
+
+# Storage keys
+/storage/*.key
+
+# Auth
+auth.json
+
+# Git
+.git
+.gitignore
+README.md
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Development files
+*.log
+*.cache 

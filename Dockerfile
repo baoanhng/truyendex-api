@@ -21,10 +21,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# remove .env
-RUN rm -f .env
-
-# Copy existing application directory
+# Copy application code (respects .dockerignore)
 COPY . .
 
 # Install dependencies
@@ -35,11 +32,6 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 # Expose port 8000 (default Laravel port)
 EXPOSE 8000
-
-# php artisan config:clear
-RUN php artisan config:clear
-# RUN php artisan cache:clear
-RUN php artisan config:cache
 
 # Start Laravel development server
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"] 
