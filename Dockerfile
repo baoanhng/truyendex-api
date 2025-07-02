@@ -1,5 +1,5 @@
-# Use PHP 8.2 Alpine as base image
-FROM php:8.2-alpine
+# Use PHP 8.3 Alpine as base image
+FROM php:8.3-alpine
 
 # Install system dependencies
 RUN apk add --no-cache \
@@ -10,10 +10,16 @@ RUN apk add --no-cache \
     libpng-dev \
     libxml2-dev \
     zip \
-    unzip
+    unzip \
+    autoconf \
+    g++ \
+    make
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql bcmath exif pcntl gd
+
+# Install Redis extension
+RUN pecl install redis && docker-php-ext-enable redis
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
