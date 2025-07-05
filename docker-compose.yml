@@ -13,7 +13,7 @@ services:
       - DB_PORT=3306
       - REDIS_PORT=6379
     ports:
-      - "8000:8000"
+      - "8000:80"
     volumes:
       - truyendex-api:/var/www/html
     working_dir: /var/www/html
